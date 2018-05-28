@@ -1,0 +1,18 @@
+{
+  "name": "ingenieria-visible-back",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.15.5",
+    "fs": "0.0.1-security",
+    "mongodb": "^3.1.0-beta4",
+    "morgan": "~1.9.0",
+    "nodemon": "^1.17.5"
+  }
+}

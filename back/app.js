@@ -1,0 +1,24 @@
+const express = require('express')
+const path = require('path')
+const logger = require('morgan')
+const cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser')
+const fs = require('fs')
+
+const app = express()
+
+app.use(logger('dev'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cookieParser())
+app.use(express.static(path.join(__dirname, 'public')))
+
+let routes = fs.readdirSync('./routes')
+routes.forEach(routeStr => {
+  let routeName = routeStr.slice(0, -3)
+  let route = require('./routes/' + routeName)
+  app.use('/' + routeName, route)
+  console.log('loaded route ' + routeName)
+})
+
+module.exports = app
