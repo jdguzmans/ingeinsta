@@ -1,0 +1,36 @@
+html, body {
+    font-family: 'Exo', sans-serif;
+    margin: 0em;
+    padding: 0em;
+}
+
+.container, .container-fluid, .col-sm-6 {
+    margin: 0em;
+    padding: 0em;
+}
+
+.first-panel {  
+    margin: 0em;
+    padding: 0.5em;
+}
+
+.second-panel {
+    margin: 0em;
+    padding: 0.5em;
+}
+
+.right-half {
+    padding-left: 1em;
+    padding-right: 0em;
+    margin: 0em;
+}
+
+.left-half {
+    padding-right: 1em;
+    padding-left: 0em;
+    margin: 0em;
+}
+
+.centered {
+    text-align: center;
+}
