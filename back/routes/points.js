@@ -3,16 +3,16 @@ var router = express.Router()
 
 router.get('/', (req, res, next) => {
   let points = [{
-    id: 0,
+    _id: 0,
     lat: 4.6837668,
     lng: -74.0524933,
-    type: 'Pavimento',
+    type: 0,
     description: 'Hueco en la 100 con 19'
   }, {
-    id: 1,
+    _id: 1,
     lat: 4.697668,
     lng: -74.0624933,
-    type: 'Pavimento',
+    type: 1,
     description: 'Semáforo'
   }]
   res.send(points)

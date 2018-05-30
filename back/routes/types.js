@@ -3,10 +3,10 @@ var router = express.Router()
 
 router.get('/', (req, res, next) => {
   let types = [{
-    id: 0,
+    _id: 0,
     name: 'Pavimento'
   }, {
-    id: 1,
+    _id: 1,
     name: 'Agua'
   }]
   res.send(types)
