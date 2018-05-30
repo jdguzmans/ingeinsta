@@ -4,33 +4,29 @@ html, body {
     padding: 0em;
 }
 
-.container, .container-fluid, .col-sm-6 {
+.container, .container-fluid, .col-sm-6{
     margin: 0em;
     padding: 0em;
 }
 
-.first-panel {  
+.first-panel, .second-panel, .third-panel, .fourth-panel, .fifth-panel {  
     margin: 0em;
-    padding: 0.5em;
-}
-
-.second-panel {
-    margin: 0em;
-    padding: 0.5em;
-}
-
-.right-half {
-    padding-left: 1em;
-    padding-right: 0em;
-    margin: 0em;
-}
-
-.left-half {
-    padding-right: 1em;
-    padding-left: 0em;
-    margin: 0em;
+    padding: 0.8em;
 }
 
 .centered {
     text-align: center;
+}
+
+#map {
+    height: 22em;
+    width: 96%;
+    margin-top: 0.8em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.image-preview {
+    height: 2em;
+    width: 2em;
 }

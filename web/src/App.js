@@ -1,37 +1,50 @@
 import React, { Component } from 'react'
-// https://www.fullstackreact.com/articles/how-to-write-a-google-maps-react-component/
-import MapContanier from './MapContainer'
+
 import './App.css'
+
+import Map from './Map'
+import Upload from './Upload'
 
 class App extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      currentPosition: null,
       points: [],
       types: []
     }
 
-    if (!navigator.geolocation) console.log('No navigator geolocation')
-
     this.backURL = 'http://localhost:3000'
+    this.isMobile = navigator.platform.includes('Android') || navigator.platform.includes('iPhone')
+
+    this.icons = {
+      currentPosition: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Ball-Chartreuse.png',
+      Pavimento: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Marker-Inside-Pink.png',
+      Agua: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Marker-Outside-Azure.png'
+    }
+
     this.getPoints = this.getPoints.bind(this)
     this.renderFilters = this.renderFilters.bind(this)
     this.getTypes = this.getTypes.bind(this)
 
-    this.getPoints()
     this.getTypes()
+    this.getPoints()
   }
 
   componentDidMount () {
     if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          this.setState({
+            currentPosition: pos.coords
+          })
+        }
+      )
       navigator.geolocation.watchPosition(
         (pos) => {
           this.setState({
-            coordinates: pos.coords
+            currentPosition: pos.coords
           })
-        },
-        (err) => {
-          console.log('ERROR' + err)
         }
       )
     }
@@ -40,29 +53,35 @@ class App extends Component {
   render () {
     return (
       <div className='app container-fluid' >
-        <div className='container-fluid first-panel'>
+        <div className='container-fluid first-panel centered'>
           <h1>Ingeniería Visible</h1>
         </div>
-        <div className='row second-panel container-fluid'>
-          <div className='left-half col-sm-6 container-fluid'>
-            <div className='container-fluid'>
-              <div className='container-fluid'>
-                <h2>Filtros</h2>
-              </div>
-              <div className='container-fluid'>
-                {this.renderFilters()}
-              </div>
+        <div className='container-fluid second-panel centered'>
+          <h3>Acá va una descripción</h3>
+        </div>
+        <div className='row third-panel container-fluid'>
+          <div className='container-fluid row'>
+            <div className='container-fluid col-sm-3 centered'>
+              <h3>Filtros</h3>
             </div>
-            <div className='container-fluid'>
-              <MapContanier
-                points={this.state.points}
-              />
+            <div className='container-fluid row col-sm-9'>
+              {this.renderFilters()}
             </div>
           </div>
-          <div className='right-half col-sm-6'>
-            <h2>H</h2>
-            <h2>H</h2>
-          </div>
+          {window.google &&
+            <Map
+              icons={this.icons}
+              types={this.state.types}
+              currentPosition={this.state.currentPosition}
+              points={this.state.points}
+          />
+          }
+        </div>
+        <div className='row fourth-panel container-fluid'>
+          <h2>H</h2>
+        </div>
+        <div className='row fifth-panel container-fluid'>
+          <Upload canUpload={true || (this.isMobile && navigator.geolocation)} />
         </div>
       </div>
     )
@@ -93,7 +112,7 @@ class App extends Component {
     let i = 0
     while (i < this.state.types.length) {
       toReturn.push(
-        <div className='container-fluid' key={i}>
+        <div className='container-fluid row centered' key={i}>
           {this.renderTypeFilter(this.state.types[i])}
           {(i + 1) < this.state.types.length ? this.renderTypeFilter(this.state.types[i + 1]) : ' '}
         </div>
@@ -103,11 +122,13 @@ class App extends Component {
     return toReturn
   }
 
-  renderTypeFilter (filter) {
+  renderTypeFilter (type) {
     return (
-      <div className='col-sm-6' >
-        <input type='checkbox' />
-        <label>Subscribe to newsletter?</label>
+      <div className='col-sm-6 form-check' >
+        <input className='form-check-input' type='checkbox' id='defaultCheck1' />
+        <label className='form-check-label' htmlFor='defaultCheck1'>
+          {type.name}
+        </label>
       </div>
     )
   }
