@@ -16,6 +16,7 @@ html, body {
 
 .centered {
     text-align: center;
+    vertical-align: center;
 }
 
 #map {
@@ -26,7 +27,25 @@ html, body {
     margin-right: auto;
 }
 
+.point {
+    padding-top: 1em;
+    width: 96%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .image-preview {
     height: 2em;
     width: 2em;
+}
+
+.anchor-link {
+    cursor:pointer;
+    color:blue;
+    text-decoration:underline;
+}
+
+.anchor-link:hover {
+    text-decoration:none;
+    text-shadow: 1px 1px 1px #555;
 }

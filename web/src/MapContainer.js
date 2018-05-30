@@ -1,11 +1,20 @@
 import React, { Component } from 'react'
 
 import Map from './Map'
+import Point from './Point'
 
 export class MapContainer extends Component {
   constructor (props) {
     super(props)
+
+    this.state = {
+      selectedPoint: null,
+      fetchedPoint: null
+    }
+
     this.renderFilters = this.renderFilters.bind(this)
+    this.changeSelectedPoint = this.changeSelectedPoint.bind(this)
+    this.fetchPoint = this.fetchPoint.bind(this)
   }
 
   render () {
@@ -22,7 +31,17 @@ export class MapContainer extends Component {
           types={this.props.types}
           currentPosition={this.props.currentPosition}
           points={this.props.points}
+          changeSelectedPoint={this.changeSelectedPoint}
+        />
+        {this.state.selectedPoint &&
+        <div className='point'>
+          <Point
+            selectedPoint={this.state.selectedPoint}
+            fetchPoint={this.fetchPoint}
+            fetchedPoint={this.state.fetchedPoint}
           />
+        </div>
+        }
       </div>
     )
   }
@@ -52,6 +71,28 @@ export class MapContainer extends Component {
         </label>
       </div>
     )
+  }
+
+  changeSelectedPoint (newSelectedPoint) {
+    this.setState({
+      selectedPoint: newSelectedPoint
+    })
+  }
+
+  fetchPoint () {
+    fetch(this.props.backURL + '/points/' + this.state.selectedPoint._id, {
+      mode: 'cors'
+    })
+    .then(response => {
+      if (response.status === 200) {
+        response.json()
+        .then(fetchedPoint => {
+          this.setState({
+            fetchedPoint: this.fetchPoint
+          })
+        })
+      } else console.log('Problems reaching the server')
+    })
   }
 }
 

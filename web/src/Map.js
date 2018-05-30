@@ -6,8 +6,9 @@ export class Map extends Component {
     this.mapRef = React.createRef()
     this.google = window.google
 
-    this.renderPoints = this.renderPoints.bind(this)
-    this.markerLinkClicked = this.markerLinkClicked.bind(this)
+    this.state = {
+      points: []
+    }
   }
 
   componentDidMount () {
@@ -20,7 +21,8 @@ export class Map extends Component {
     })
   }
 
-  componentDidUpdate (prevProps, prevState, snapshot) {
+  componentDidUpdate (prevProps, prevState) {
+    // WHAT HAPPENS IF THE PERSON MOVES?
     if (this.props.currentPosition) {
       let marker = new this.google.maps.Marker({
         position: {
@@ -38,32 +40,28 @@ export class Map extends Component {
       })
     }
 
-    this.renderPoints()
-  }
-
-  renderPoints () {
     this.props.points.forEach(point => {
-      let type
-      this.props.types.forEach(t => {
-        type = t._id === point.type ? t : type
-      })
-
-      let marker = new this.google.maps.Marker({
-        position: {
-          lat: point.lat,
-          lng: point.lng
-        },
-        map: this.map,
-        icon: this.props.icons[type.name]
-      })
-
-      marker.addListener('click', (e) => {
-        let infowindow = new this.google.maps.InfoWindow({
-          content: '<a onClick={changedShowedPoint(' + point._id + ')} > + point.description + </a>'
+      if (!prevProps.points.includes(point)) {
+        let marker = new this.google.maps.Marker({
+          position: {
+            lat: point.lat,
+            lng: point.lng
+          },
+          map: this.map,
+          icon: this.props.icons[point.type.name]
         })
-        infowindow.open(this.map, marker)
-      })
+
+        marker.addListener('click', (e) => {
+          let infowindow = new this.google.maps.InfoWindow({
+            content: point.description
+          })
+          infowindow.open(this.map, marker)
+          this.props.changeSelectedPoint(point)
+        })
+      }
     })
+
+    // WHAT HAPPENS IF A POINT IS DELETED?
   }
 
   render () {

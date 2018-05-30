@@ -3,8 +3,9 @@ import React, { Component } from 'react'
 import './App.css'
 
 import MapContainer from './MapContainer'
-import Point from './Point'
 import Upload from './Upload'
+
+import parallel from 'async/parallel'
 
 class App extends Component {
   constructor (props) {
@@ -24,22 +25,11 @@ class App extends Component {
       Agua: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Marker-Outside-Azure.png'
     }
 
-    this.getPoints = this.getPoints.bind(this)
-    this.getTypes = this.getTypes.bind(this)
-
-    this.getTypes()
-    this.getPoints()
+    this.getTypesAndPoints = this.getTypesAndPoints.bind(this)
   }
 
   componentDidMount () {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          this.setState({
-            currentPosition: pos.coords
-          })
-        }
-      )
       navigator.geolocation.watchPosition(
         (pos) => {
           this.setState({
@@ -48,6 +38,7 @@ class App extends Component {
         }
       )
     }
+    this.getTypesAndPoints()
   }
 
   render () {
@@ -57,18 +48,16 @@ class App extends Component {
           <h1>Ingeniería Visible</h1>
         </div>
         <div className='container-fluid second-panel centered'>
-          <h3>Acá va una descripción</h3>
+          <h3>Acá va una descripción, zolo miyoz, Duque es el que es</h3>
         </div>
         {window.google &&
         <div className='row third-panel container-fluid'>
           <MapContainer
+            backURL={this.backURL}
             icons={this.icons}
             types={this.state.types}
             currentPosition={this.state.currentPosition}
             points={this.state.points}
-          />
-          <Point
-            showedPointId={window.showedPointId}
           />
         </div>
         }
@@ -79,41 +68,52 @@ class App extends Component {
     )
   }
 
-  getPoints () {
-    fetch(this.backURL + '/points', {
-      mode: 'cors'
-    })
-    .then(response => {
-      if (response.status === 200) {
-        return response.json()
+  getTypesAndPoints () {
+    parallel([
+      (cb) => {
+        fetch(this.backURL + '/types', {
+          mode: 'cors'
+        })
+        .then(response => {
+          if (response.status === 200) {
+            response.json()
+            .then(types => {
+              cb(null, types)
+            })
+          } else console.log('Problems reaching the server')
+        })
+      },
+      (cb) => {
+        fetch(this.backURL + '/points', {
+          mode: 'cors'
+        })
+        .then(response => {
+          if (response.status === 200) {
+            response.json()
+            .then(points => {
+              cb(null, points)
+            })
+          } else console.log('Problems reaching the server')
+        })
       }
-    })
-    .then(points => {
-      this.setState({
-        points: points
-      })
-    })
-    .catch(e => {
-      throw e
-    })
-  }
-
-  getTypes () {
-    fetch(this.backURL + '/types', {
-      mode: 'cors'
-    })
-    .then(response => {
-      if (response.status === 200) {
-        return response.json()
+    ],
+    (err, res) => {
+      if (err) console.log(err)
+      else {
+        let types = res[0]
+        let points = res[1].map(point => {
+          let type
+          types.forEach(t => {
+            type = t._id === point.type ? t : type
+          })
+          point.type = type
+          return point
+        })
+        this.setState({
+          types: types,
+          points: points
+        })
       }
-    })
-    .then(types => {
-      this.setState({
-        types: types
-      })
-    })
-    .catch(e => {
-      throw e
     })
   }
 }
