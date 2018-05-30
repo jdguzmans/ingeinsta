@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 
 import './App.css'
 
-import Map from './Map'
+import MapContainer from './MapContainer'
+import Point from './Point'
 import Upload from './Upload'
 
 class App extends Component {
@@ -24,7 +25,6 @@ class App extends Component {
     }
 
     this.getPoints = this.getPoints.bind(this)
-    this.renderFilters = this.renderFilters.bind(this)
     this.getTypes = this.getTypes.bind(this)
 
     this.getTypes()
@@ -59,28 +59,20 @@ class App extends Component {
         <div className='container-fluid second-panel centered'>
           <h3>Acá va una descripción</h3>
         </div>
+        {window.google &&
         <div className='row third-panel container-fluid'>
-          <div className='container-fluid row'>
-            <div className='container-fluid col-sm-3 centered'>
-              <h3>Filtros</h3>
-            </div>
-            <div className='container-fluid row col-sm-9'>
-              {this.renderFilters()}
-            </div>
-          </div>
-          {window.google &&
-            <Map
-              icons={this.icons}
-              types={this.state.types}
-              currentPosition={this.state.currentPosition}
-              points={this.state.points}
+          <MapContainer
+            icons={this.icons}
+            types={this.state.types}
+            currentPosition={this.state.currentPosition}
+            points={this.state.points}
           />
-          }
+          <Point
+            showedPointId={window.showedPointId}
+          />
         </div>
+        }
         <div className='row fourth-panel container-fluid'>
-          <h2>H</h2>
-        </div>
-        <div className='row fifth-panel container-fluid'>
           <Upload canUpload={true || (this.isMobile && navigator.geolocation)} />
         </div>
       </div>
@@ -104,33 +96,6 @@ class App extends Component {
     .catch(e => {
       throw e
     })
-  }
-
-  renderFilters () {
-    let toReturn = []
-
-    let i = 0
-    while (i < this.state.types.length) {
-      toReturn.push(
-        <div className='container-fluid row centered' key={i}>
-          {this.renderTypeFilter(this.state.types[i])}
-          {(i + 1) < this.state.types.length ? this.renderTypeFilter(this.state.types[i + 1]) : ' '}
-        </div>
-      )
-      i = i + 2
-    }
-    return toReturn
-  }
-
-  renderTypeFilter (type) {
-    return (
-      <div className='col-sm-6 form-check' >
-        <input className='form-check-input' type='checkbox' id='defaultCheck1' />
-        <label className='form-check-label' htmlFor='defaultCheck1'>
-          {type.name}
-        </label>
-      </div>
-    )
   }
 
   getTypes () {

@@ -1,3 +1,5 @@
+/* global FileReader */
+
 import React, { Component } from 'react'
 
 // https://gist.github.com/hartzis/0b77920380736f98e4f9
@@ -16,7 +18,6 @@ export class Upload extends Component {
 
   handleSubmit (e) {
     e.preventDefault()
-    console.log(this.state.file)
   }
 
   handleImageChange (e) {

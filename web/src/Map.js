@@ -21,7 +21,6 @@ export class Map extends Component {
   }
 
   componentDidUpdate (prevProps, prevState, snapshot) {
-    if (this.props === prevProps) console.log('props iguales')
     if (this.props.currentPosition) {
       let marker = new this.google.maps.Marker({
         position: {
@@ -65,10 +64,6 @@ export class Map extends Component {
         infowindow.open(this.map, marker)
       })
     })
-  }
-
-  markerLinkClicked () {
-    console.log(111)
   }
 
   render () {
