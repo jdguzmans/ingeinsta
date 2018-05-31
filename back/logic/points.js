@@ -5,36 +5,6 @@ const AWS = require('aws-sdk')
 const s3 = new AWS.S3()
 const eachLimit = require('async/eachLimit')
 
-// mock()
-
-// function mock () {
-//   let points = [{
-//     lat: 4.6837668,
-//     lng: -74.0524933,
-//     type: ObjectId('5b0f6852cf2d6c3d6e8e9049'),
-//     description: 'Hueco en la 100 con 19'
-//   }, {
-//     lat: 4.697668,
-//     lng: -74.0624933,
-//     type: ObjectId('5b0f6852cf2d6c3d6e8e904a'),
-//     description: 'Semáforo'
-//   }]
-
-//   MongoCLient.connect(config.db.uri,
-//     (err, client) => {
-//       if (err) throw err
-//       else {
-//         let Points = client.db('ingenieria-visible').collection('points')
-//         Points.insertMany(points,
-//         (err) => {
-//           if (err) throw err
-//           else console.log('Database mock POINTS created')
-//         })
-//       }
-//     }
-//   )
-// }
-
 /**
  * Finds all the points
  * @returns {Promise <Object>} A promise that resolves with all the points
@@ -78,7 +48,7 @@ exports.insertPoint = (description, type, lat, lng, information) => {
     else if (!information) reject(new Error('El punto debe tener información asociada'))
     else if (!information.images || !information.images[0]) reject(new Error('El punto debe tener al menos una imagen asociada'))
     else if (information.images.filter(image => {
-      return image.buffer
+      return !image.buffer || !image.extension
     }).length > 0) reject(new Error('Imágenes no válidas'))
     else {
       MongoCLient.connect(
@@ -87,7 +57,7 @@ exports.insertPoint = (description, type, lat, lng, information) => {
           if (err) reject(err)
           else {
             let Types = client.db('ingenieria-visible').collection('types')
-            Types.findOne({_id: ObjectId()},
+            Types.findOne({_id: ObjectId(type)},
             (err, res) => {
               if (err) {
                 reject(err)
@@ -114,7 +84,8 @@ exports.insertPoint = (description, type, lat, lng, information) => {
                     information.images.forEach((image, index) => {
                       images.push({
                         index: index,
-                        date: date
+                        date: date,
+                        extension: image.extension
                       })
                       image.index = index
                     })
@@ -128,9 +99,10 @@ exports.insertPoint = (description, type, lat, lng, information) => {
                         eachLimit(information.images, 1,
                         (image, cb) => {
                           s3.putObject({
-                            Bucket: config.storage.awsBucket,
-                            Key: String(insertedId + '@' + image.index),
-                            Body: image.buffer
+                            Bucket: config.awsBucket,
+                            Key: String(insertedId + '-' + image.index + '.jpg'),
+                            Body: image.buffer,
+                            ACL: 'public-read'
                           }, (err, data) => {
                             if (err) throw err
                             else cb()
@@ -152,3 +124,44 @@ exports.insertPoint = (description, type, lat, lng, information) => {
     }
   })
 }
+
+// mock()
+
+// function mock () {
+//   const fs = require('fs')
+//   let points = [{
+//     lat: 4.6837668,
+//     lng: -74.0524933,
+//     type: '5b0f6852cf2d6c3d6e8e9049',
+//     description: 'Hueco en la 100 con 19',
+//     information: {
+//       images: [{
+//         buffer: fs.readFileSync('/home/jdguzmans/Downloads/456256_174133_1.jpg'),
+//         extension: 'jpg'
+//       }]
+//     }
+//   }, {
+//     lat: 4.697668,
+//     lng: -74.0624933,
+//     type: '5b0f6852cf2d6c3d6e8e904a',
+//     description: 'Semáforo',
+//     information: {
+//       images: [{
+//         buffer: fs.readFileSync('/home/jdguzmans/Downloads/446252_221529_1.jpg'),
+//         extension: 'jpg'
+//       }]
+//     }
+//   }]
+
+//   exports.insertPoint(points[0].description, points[0].type, points[0].lat, points[0].lng, points[0].information)
+//   .then(() => {
+//     exports.insertPoint(points[1].description, points[1].type, points[1].lat, points[1].lng, points[1].information)
+//   })
+//   .then(() => {
+//     console.log('coronamos')
+//   })
+//   .catch(e => {
+//     console.log('paila')
+//     console.log(e)
+//   })
+// }
