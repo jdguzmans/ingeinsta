@@ -65,8 +65,7 @@ exports.insertType = (name) => {
             let Types = client.db('ingenieria-visible').collection('types')
             Types.insertOne({
               name: name
-            },
-            (err) => {
+            }, (err) => {
               if (err) reject(err)
               else resolve()
               client.close()

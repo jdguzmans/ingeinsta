@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const pointsLogic = require('./../logic/points')
+const pointInformationLogic = require('./../logic/pointInformation')
 
 router.get('/', (req, res, next) => {
   pointsLogic.findAllPoints()
@@ -10,10 +11,10 @@ router.get('/', (req, res, next) => {
   })
 })
 
-router.get('/:pointId', (req, res, next) => {
+router.get('/:pointId/information', (req, res, next) => {
   let pointId = req.params.pointId
 
-  pointsLogic.findPointById(pointId)
+  pointInformationLogic.findPointInformationById(pointId)
   .then(point => {
     res.send(point)
   })

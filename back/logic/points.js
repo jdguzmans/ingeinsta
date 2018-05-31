@@ -1,6 +1,9 @@
 const config = require('./../config')
 const MongoCLient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectID
+const AWS = require('aws-sdk')
+const s3 = new AWS.S3()
+const eachLimit = require('async/eachLimit')
 
 // mock()
 
@@ -57,62 +60,91 @@ exports.findAllPoints = () => {
 }
 
 /**
- * Finds the point by it's id
- * @param pointId the identifier (_id) of the point
- * @returns {Promise <Object>} A promise that resolves with the point searched or null if it does not exit
-*/
-exports.findPointById = (pointId) => {
-  return findPointById(pointId)
-}
-
-function findPointById (pointId) {
-  return new Promise((resolve, reject) => {
-    MongoCLient.connect(config.db.uri,
-      (err, client) => {
-        if (err) reject(err)
-        else {
-          let Points = client.db('ingenieria-visible').collection('points')
-          Points.findOne({_id: new ObjectId(pointId)},
-          (err, res) => {
-            if (err) reject(err)
-            else if (!res) reject(new Error('No existe un punto con ese identificador.'))
-            else resolve(res)
-            client.close()
-          })
-        }
-      }
-    )
-  })
-}
-
-/**
  * Inserts a point
- * @param point point to insert
- * @returns {Promise <Object, Err>} A promise that resolves if inserted or rejects otherwise
+ * @param description description of the point
+ * @param type type of the point
+ * @param lat latitude of the point
+ * @param lng longitude of the point
+ * @param information information of the point
+ * @param information.images array of buffer
+ * @returns {Promise <Object, Err>} a promise that resolves if inserted or rejects otherwise
 */
-exports.insertPoint = (description, type, lat, lng) => {
+exports.insertPoint = (description, type, lat, lng, information) => {
   return new Promise((resolve, reject) => {
-    if (description) reject(new Error('El punto debe tener una descripción'))
-    if (type) reject(new Error('El punto debe tener un typo'))
-    if (lat) reject(new Error('El punto debe tener una latitud'))
-    if (lng) reject(new Error('El punto debe tener una longitud'))
+    if (!description) reject(new Error('El punto debe tener una descripción'))
+    else if (!type) reject(new Error('El punto debe tener un tipo'))
+    else if (!lat) reject(new Error('El punto debe tener una latitud'))
+    else if (!lng) reject(new Error('El punto debe tener una longitud'))
+    else if (!information) reject(new Error('El punto debe tener información asociada'))
+    else if (!information.images || !information.images[0]) reject(new Error('El punto debe tener al menos una imagen asociada'))
+    else if (information.images.filter(image => {
+      return image.buffer
+    }).length > 0) reject(new Error('Imágenes no válidas'))
     else {
       MongoCLient.connect(
         config.db.uri,
         (err, client) => {
           if (err) reject(err)
           else {
-            let Points = client.db('ingenieria-visible').collection('points')
-            Points.insertOne({
-              description: description,
-              type: type,
-              lat: lat,
-              lng: lng
-            },
-            (err) => {
-              if (err) reject(err)
-              else resolve()
-              client.close()
+            let Types = client.db('ingenieria-visible').collection('types')
+            Types.findOne({_id: ObjectId()},
+            (err, res) => {
+              if (err) {
+                reject(err)
+                client.close()
+              } else if (!res) {
+                reject(new Error('Tipo inválido'))
+                client.close()
+              } else {
+                let Points = client.db('ingenieria-visible').collection('points')
+                Points.insertOne({
+                  description: description,
+                  type: type,
+                  lat: lat,
+                  lng: lng
+                }, (err, res) => {
+                  if (err) {
+                    client.close()
+                    reject(err)
+                  } else {
+                    let insertedId = res.insertedId
+                    let date = new Date().getTime()
+
+                    let images = []
+                    information.images.forEach((image, index) => {
+                      images.push({
+                        index: index,
+                        date: date
+                      })
+                      image.index = index
+                    })
+                    let PointInformation = client.db('ingenieria-visible').collection('pointInformation')
+                    PointInformation.insertOne({
+                      _id: ObjectId(insertedId),
+                      images: images
+                    }, (err) => {
+                      if (err) reject(err)
+                      else {
+                        eachLimit(information.images, 1,
+                        (image, cb) => {
+                          s3.putObject({
+                            Bucket: config.storage.awsBucket,
+                            Key: String(insertedId + '@' + image.index),
+                            Body: image.buffer
+                          }, (err, data) => {
+                            if (err) throw err
+                            else cb()
+                          })
+                        }, (err) => {
+                          if (err) reject(err)
+                          else resolve()
+                        })
+                      }
+                      client.close()
+                    })
+                  }
+                })
+              }
             })
           }
         }
