@@ -1,15 +1,13 @@
-var express = require('express')
-var router = express.Router()
+const express = require('express')
+const router = express.Router()
+
+const typesLogic = require('./../logic/types')
 
 router.get('/', (req, res, next) => {
-  let types = [{
-    _id: 0,
-    name: 'Pavimento'
-  }, {
-    _id: 1,
-    name: 'Agua'
-  }]
-  res.send(types)
+  typesLogic.findAllTypes()
+  .then(points => {
+    res.send(points)
+  })
 })
 
 module.exports = router
