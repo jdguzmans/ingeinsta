@@ -16,7 +16,9 @@ class App extends Component {
       types: []
     }
 
-    this.backURL = 'http://localhost:3000'
+    // this.backURL = 'http://localhost:3000'
+    this.backURL = 'http://45.77.75.20:3000'
+
     this.isMobile = navigator.platform.includes('Android') || navigator.platform.includes('iPhone')
 
     this.icons = {
