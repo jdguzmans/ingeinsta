@@ -9,12 +9,12 @@ export class MapContainer extends Component {
 
     this.state = {
       selectedPoint: null,
-      fetchedPoint: null
+      selectedPointInformation: null
     }
 
     this.renderFilters = this.renderFilters.bind(this)
     this.changeSelectedPoint = this.changeSelectedPoint.bind(this)
-    this.fetchPoint = this.fetchPoint.bind(this)
+    this.getPointInformation = this.getPointInformation.bind(this)
   }
 
   render () {
@@ -37,8 +37,8 @@ export class MapContainer extends Component {
         <div className='point'>
           <Point
             selectedPoint={this.state.selectedPoint}
-            fetchPoint={this.fetchPoint}
-            fetchedPoint={this.state.fetchedPoint}
+            getPointInformation={this.getPointInformation}
+            selectedPointInformation={this.state.selectedPointInformation}
           />
         </div>
         }
@@ -75,24 +75,27 @@ export class MapContainer extends Component {
 
   changeSelectedPoint (newSelectedPoint) {
     this.setState({
-      selectedPoint: newSelectedPoint
+      selectedPoint: newSelectedPoint,
+      selectedPointInformation: null
     })
   }
 
-  fetchPoint () {
-    fetch(this.props.backURL + '/points/' + this.state.selectedPoint._id, {
-      mode: 'cors'
-    })
-    .then(response => {
-      if (response.status === 200) {
-        response.json()
-        .then(fetchedPoint => {
-          this.setState({
-            fetchedPoint: this.fetchPoint
+  getPointInformation () {
+    if (!this.state.selectedPointInformation || this.state.selectedPoint._id !== this.state.selectedPointInformation._id) {
+      fetch(this.props.backURL + '/points/' + this.state.selectedPoint._id + '/information', {
+        mode: 'cors'
+      })
+      .then(response => {
+        if (response.status === 200) {
+          response.json()
+          .then(pointInformation => {
+            this.setState({
+              selectedPointInformation: pointInformation
+            })
           })
-        })
-      } else console.log('Problems reaching the server')
-    })
+        } else console.log('Problems reaching the server')
+      })
+    }
   }
 }
 
