@@ -40,6 +40,8 @@ exports.findAllPoints = () => {
  * @returns {Promise <Object, Err>} a promise that resolves if inserted or rejects otherwise
 */
 exports.insertPoint = (description, type, lat, lng, information) => {
+  let date = new Date().getTime()
+
   return new Promise((resolve, reject) => {
     if (!description) reject(new Error('El punto debe tener una descripción'))
     else if (!type) reject(new Error('El punto debe tener un tipo'))
@@ -71,14 +73,14 @@ exports.insertPoint = (description, type, lat, lng, information) => {
                   description: description,
                   type: type,
                   lat: lat,
-                  lng: lng
+                  lng: lng,
+                  date: date
                 }, (err, res) => {
                   if (err) {
                     client.close()
                     reject(err)
                   } else {
                     let insertedId = res.insertedId
-                    let date = new Date().getTime()
 
                     let images = []
                     information.images.forEach((image, index) => {
@@ -100,7 +102,7 @@ exports.insertPoint = (description, type, lat, lng, information) => {
                         (image, cb) => {
                           s3.putObject({
                             Bucket: config.awsBucket,
-                            Key: String(insertedId + '-' + image.index + '.jpg'),
+                            Key: String(insertedId + '-' + image.index + '.' + image.extension),
                             Body: image.buffer,
                             ACL: 'public-read'
                           }, (err, data) => {
@@ -136,7 +138,10 @@ exports.insertPoint = (description, type, lat, lng, information) => {
 //     description: 'Hueco en la 100 con 19',
 //     information: {
 //       images: [{
-//         buffer: fs.readFileSync('/home/jdguzmans/Downloads/456256_174133_1.jpg'),
+//         buffer: fs.readFileSync('/home/jdguzmans/Downloads/ivan0.jpeg'),
+//         extension: 'jpeg'
+//       }, {
+//         buffer: fs.readFileSync('/home/jdguzmans/Downloads/ivan1.jpg'),
 //         extension: 'jpg'
 //       }]
 //     }
@@ -147,7 +152,13 @@ exports.insertPoint = (description, type, lat, lng, information) => {
 //     description: 'Semáforo',
 //     information: {
 //       images: [{
-//         buffer: fs.readFileSync('/home/jdguzmans/Downloads/446252_221529_1.jpg'),
+//         buffer: fs.readFileSync('/home/jdguzmans/Downloads/alvaro0.jpg'),
+//         extension: 'jpg'
+//       }, {
+//         buffer: fs.readFileSync('/home/jdguzmans/Downloads/alvaro1.jpg'),
+//         extension: 'jpg'
+//       }, {
+//         buffer: fs.readFileSync('/home/jdguzmans/Downloads/alvaro2.jpg'),
 //         extension: 'jpg'
 //       }]
 //     }

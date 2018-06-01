@@ -18,10 +18,7 @@ exports.findPointInformationById = (pointId) => {
           (err, res) => {
             if (err) reject(err)
             else if (!res) reject(new Error('No existe un punto con ese identificador.'))
-            else {
-              delete res._id
-              resolve(res)
-            }
+            else resolve(res)
             client.close()
           })
         }
