@@ -16,15 +16,15 @@ class App extends Component {
       types: []
     }
 
-    // this.backURL = 'http://localhost:3000'
-    this.backURL = 'http://45.77.75.20:3000'
+    this.backURL = 'http://localhost:3000'
+    // this.backURL = 'http://45.77.75.20:3000'
 
     this.isMobile = navigator.platform.includes('Android') || navigator.platform.includes('iPhone')
 
     this.icons = {
       currentPosition: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Ball-Chartreuse.png',
-      Pavimento: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Marker-Inside-Pink.png',
-      Agua: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Marker-Outside-Azure.png'
+      'Espacio público': 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Marker-Inside-Pink.png',
+      Pavimento: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Marker-Outside-Azure.png'
     }
 
     this.getTypesAndPoints = this.getTypesAndPoints.bind(this)
@@ -47,7 +47,7 @@ class App extends Component {
     return (
       <div className='app container-fluid' >
         <div className='container-fluid first-panel centered'>
-          <h1>Ingeniería Visible</h1>
+          <h1>Ingeninsta</h1>
         </div>
         <div className='container-fluid second-panel centered'>
           <h3>Acá va una descripción, zolo miyoz, Duque es el que es</h3>
@@ -64,7 +64,10 @@ class App extends Component {
         </div>
         }
         <div className='row fourth-panel container-fluid'>
-          <Upload canUpload={true || (this.isMobile && navigator.geolocation)} />
+          <Upload
+            canUpload={true || (this.isMobile && navigator.geolocation)}
+            types={this.state.types}
+          />
         </div>
       </div>
     )

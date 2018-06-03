@@ -4,7 +4,7 @@ html, body {
     padding: 0em;
 }
 
-.container, .container-fluid, .col-sm-6{
+.container, .container-fluid, .col-sm-6 {
     margin: 0em;
     padding: 0em;
 }
@@ -20,7 +20,7 @@ html, body {
 }
 
 #map {
-    height: 22em;
+    height: 25em;
     width: 96%;
     margin-top: 0.8em;
     margin-left: auto;
@@ -35,8 +35,8 @@ html, body {
 }
 
 .image-preview {
-    height: 2em;
-    width: 2em;
+    height: 10em;
+    width: 10em;
 }
 
 .anchor-link {
@@ -52,4 +52,12 @@ html, body {
 
 .carousel-control-prev, .carousel-control-next {
     cursor:pointer;
+}
+
+.padding-top {
+    padding-top: 1em;
+}
+
+.padding-bottom {
+    padding-bottom: 1em;
 }

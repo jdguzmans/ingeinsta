@@ -15,6 +15,9 @@ export class Point extends Component {
   }
 
   render () {
+    let date = new Date(this.props.selectedPoint.date)
+    console.log(date)
+    console.log(this.props)
     return (
       <div>
         <div className='container-fluid row centered' >
@@ -44,6 +47,14 @@ export class Point extends Component {
               </div>
               <div className='col-sm-6'>
                 <h5>{this.props.selectedPoint.description}</h5>
+              </div>
+            </div>
+            <div className='row'>
+              <div className='col-sm-6'>
+                <h5>Fecha</h5>
+              </div>
+              <div className='col-sm-6'>
+                <h5>{date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() }</h5>
               </div>
             </div>
           </div>
