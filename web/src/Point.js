@@ -16,8 +16,6 @@ export class Point extends Component {
 
   render () {
     let date = new Date(this.props.selectedPoint.date)
-    console.log(date)
-    console.log(this.props)
     return (
       <div>
         <div className='container-fluid row centered' >

@@ -24,14 +24,26 @@ router.get('/:pointId/information', (req, res, next) => {
   })
 })
 
-router.post('/', upload, (req, res, next) => {
+router.post('/', upload.any(), (req, res, next) => {
   let point = req.body
-  console.log(req.body)
+
   let description = point.description
   let type = point.type
-  let lat = point.lat
-  let lng = point.lng
-  let information = point.information
+  let lat = Number(point.lat)
+  let lng = Number(point.lng)
+  let information = {
+    images: []
+  }
+
+  let files = req.files
+  files.forEach(file => {
+    let parts = file.originalname.split('.')
+    let extension = parts[parts.length - 1]
+    information.images.push({
+      buffer: file.buffer,
+      extension: extension
+    })
+  })
 
   pointsLogic.insertPoint(description, type, lat, lng, information)
   .then(point => {

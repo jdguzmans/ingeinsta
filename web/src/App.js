@@ -44,7 +44,6 @@ class App extends Component {
         this.setState({
           currentPosition: pos.coords
         })
-        console.log(1)
       })
     }
     this.getTypesAndPoints()
@@ -73,7 +72,10 @@ class App extends Component {
         <div className='row fourth-panel container-fluid'>
           <Upload
             canUpload={true || (this.isMobile && navigator.geolocation)}
-            currentPosition={this.state.currentPosition ? this.state.currentPosition : {lat: 1, lng: 1}}
+            currentPosition={this.state.currentPosition ? this.state.currentPosition : {
+              lat: 4.691668,
+              lng: -74.0694933
+            }}
             types={this.state.types}
             uploadPoint={this.uploadPoint}
           />
@@ -83,20 +85,24 @@ class App extends Component {
   }
 
   uploadPoint (point) {
-    // let data = new FormData()
-    // data.append('descripton', point.description)
-    // data.append('type', point.type)
-    // data.append('lat', point.lat)
-    // data.append('lng', point.lng)
-    // data.append('files', point.lng)
+    let data = new FormData()
+    data.append('description', point.description)
+    data.append('type', point.type)
+    data.append('lat', point.lat)
+    data.append('lng', point.lng)
+
+    point.information.images.forEach((image, i) => {
+      data.append('information_images_' + i, image)
+    })
 
     fetch(this.backURL + '/points', {
       mode: 'cors',
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(point)
+      // headers: {
+      //   // 'content-type': 'application/json'
+      //   'content-type': 'multipart/form-data'
+      // },
+      body: data
     })
     .then(response => {
 
