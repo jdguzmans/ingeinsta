@@ -1,6 +1,7 @@
 /* global FileReader */
 
 import React, { Component } from 'react'
+import whilst from 'async/whilst'
 
 // https://gist.github.com/hartzis/0b77920380736f98e4f9
 
@@ -8,38 +9,72 @@ export class Upload extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      description: null,
+      description: '',
       type: null,
       images: null,
       imagePreviewURLs: null,
-      file: null,
-      imagePreviewUrl: null
+      selectedImageCarouselIndex: null
     }
 
     this.changedDescription = this.changedDescription.bind(this)
     this.renderTypes = this.renderTypes.bind(this)
     this.changedType = this.changedType.bind(this)
     this.handleImageChange = this.handleImageChange.bind(this)
+    this.renderCarouselIndicators = this.renderCarouselIndicators.bind(this)
+    this.renderUploadImages = this.renderUploadImages.bind(this)
+    this.nextImageInCarrousel = this.nextImageInCarrousel.bind(this)
+    this.previousImageInCarrousel = this.previousImageInCarrousel.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   handleSubmit (e) {
     e.preventDefault()
+
+    let point = {
+      description: this.state.description,
+      type: this.state.type,
+      lat: this.props.currentPosition.lat,
+      lng: this.props.currentPosition.lng,
+      information: {
+        images: this.state.images
+      }
+    }
+
+    this.props.uploadPoint(point)
   }
 
   handleImageChange (e) {
-    let reader = new FileReader()
-    console.log(e.target.files)
-    let file = e.target.files[0]
+    let fileList = e.target.files
+    let length = fileList.length
 
-    reader.onloadend = () => {
-      this.setState({
-        file: file,
-        imagePreviewUrl: reader.result
-      })
-    }
+    let images = []
+    let urls = []
 
-    reader.readAsDataURL(file)
+    let i = 0
+    whilst(
+      () => {
+        return i < length
+      },
+      (cb) => {
+        let reader = new FileReader()
+        let file = fileList[i]
+        reader.onloadend = () => {
+          images.push(file)
+          urls.push(reader.result)
+          cb()
+        }
+        reader.readAsDataURL(file)
+        i++
+      },
+      (err) => {
+        if (err) throw err
+        this.setState({
+          selectedImageCarouselIndex: 0,
+          images: images,
+          imageURLs: urls
+        })
+      }
+    )
   }
 
   renderTypes () {
@@ -61,9 +96,40 @@ export class Upload extends Component {
     })
   }
 
-  changedDescription (description) {
+  changedDescription (e) {
     this.setState({
-      description: description
+      description: e.target.value
+    })
+  }
+
+  renderCarouselIndicators () {
+    return this.state.images.map((image, i) => {
+      return (
+        <li key={i} data-slide-to={i} className={i === this.state.selectedImageCarouselIndex ? 'active' : ''} />
+      )
+    })
+  }
+
+  renderUploadImages () {
+    return this.state.imageURLs.map((url, i) => {
+      let className = 'carousel-item ' + (i === this.state.selectedImageCarouselIndex ? 'active' : '')
+      return (
+        <div key={i} className={className}>
+          <img className='d-block w-100' src={url} alt={'Slide}' + i} />
+        </div>
+      )
+    })
+  }
+
+  nextImageInCarrousel () {
+    this.setState({
+      selectedImageCarouselIndex: (this.state.selectedImageCarouselIndex + 1) % this.state.images.length
+    })
+  }
+
+  previousImageInCarrousel () {
+    this.setState({
+      selectedImageCarouselIndex: this.state.selectedImageCarouselIndex === 0 ? (this.state.images.length - 1) : (this.state.selectedImageCarouselIndex - 1)
     })
   }
 
@@ -84,7 +150,7 @@ export class Upload extends Component {
                   <label htmlFor='upload-description'>Descripción (máximo 50 caracteres)</label>
                 </div>
                 <div className='col-sm-8 container-fluid'>
-                  <textarea className='form-control' id='upload-description' rows='2' maxLength='50' onChange={this.changedDescription} />
+                  <textarea className='form-control' id='upload-description' rows='2' maxLength='50' value={this.state.description} onChange={this.changedDescription} />
                 </div>
               </div>
               <div className='row container-fluid padding-top'>
@@ -103,16 +169,13 @@ export class Upload extends Component {
                   <div className='row form-group container-fluid'>
                     <input type='file' className='form-control-file' onChange={this.handleImageChange} accept='.jpg, .jpeg, .png' multiple />
                   </div>
-                  {this.state.file &&
-                    <img className='image-preview' alt='upload preview' src={this.state.imagePreviewUrl} />
-                  }
                   {this.state.images &&
                   <div className='carousel slide' data-ride='carousel'>
                     <ol className='carousel-indicators'>
                       {this.renderCarouselIndicators()}
                     </ol>
                     <div className='carousel-inner'>
-                      {this.renderSelectedPointImages()}
+                      {this.renderUploadImages()}
                     </div>
                     <a className='carousel-control-prev' data-slide='prev' onClick={this.previousImageInCarrousel}>
                       <span className='carousel-control-prev-icon' aria-hidden='true' />
@@ -127,7 +190,7 @@ export class Upload extends Component {
                 </div>
                 <div className='row container-fluid padding-bottom'>
                   <div className='form-group offset-sm-4 col-sm-8' >
-                    <button type='submit' onClick={this.handleSubmit} disabled={!this.state.description || !this.state.type}>Subir punto</button>
+                    <button className='btn' type='submit' onClick={this.handleSubmit} disabled={!this.state.description || this.state.description.length === 0 || !this.state.type || !this.state.images}>Subir punto</button>
                   </div>
                 </div>
               </div>

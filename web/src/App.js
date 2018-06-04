@@ -1,3 +1,5 @@
+/* global FormData */
+
 import React, { Component } from 'react'
 
 import './App.css'
@@ -12,6 +14,10 @@ class App extends Component {
     super(props)
     this.state = {
       currentPosition: null,
+      // currentPosition: {
+      //   lat: '4,6887668',
+      //   lng: '-74,0594933'
+      // },
       points: [],
       types: []
     }
@@ -28,17 +34,18 @@ class App extends Component {
     }
 
     this.getTypesAndPoints = this.getTypesAndPoints.bind(this)
+    this.uploadPoint = this.uploadPoint.bind(this)
   }
 
   componentDidMount () {
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition(
-        (pos) => {
-          this.setState({
-            currentPosition: pos.coords
-          })
-        }
-      )
+      (pos) => {
+        this.setState({
+          currentPosition: pos.coords
+        })
+        console.log(1)
+      })
     }
     this.getTypesAndPoints()
   }
@@ -66,11 +73,34 @@ class App extends Component {
         <div className='row fourth-panel container-fluid'>
           <Upload
             canUpload={true || (this.isMobile && navigator.geolocation)}
+            currentPosition={this.state.currentPosition ? this.state.currentPosition : {lat: 1, lng: 1}}
             types={this.state.types}
+            uploadPoint={this.uploadPoint}
           />
         </div>
       </div>
     )
+  }
+
+  uploadPoint (point) {
+    // let data = new FormData()
+    // data.append('descripton', point.description)
+    // data.append('type', point.type)
+    // data.append('lat', point.lat)
+    // data.append('lng', point.lng)
+    // data.append('files', point.lng)
+
+    fetch(this.backURL + '/points', {
+      mode: 'cors',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(point)
+    })
+    .then(response => {
+
+    })
   }
 
   getTypesAndPoints () {
