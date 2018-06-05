@@ -14,16 +14,12 @@ class App extends Component {
     super(props)
     this.state = {
       currentPosition: null,
-      // currentPosition: {
-      //   lat: '4,6887668',
-      //   lng: '-74,0594933'
-      // },
       points: [],
       types: []
     }
 
-    this.backURL = 'http://localhost:3000'
-    // this.backURL = 'http://45.77.75.20:3000'
+    // this.backURL = 'http://localhost:3000'
+    this.backURL = 'https://ret-solutions.com:3333'
 
     this.isMobile = navigator.platform.includes('Android') || navigator.platform.includes('iPhone')
 
