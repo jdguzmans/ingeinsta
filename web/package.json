@@ -13,6 +13,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && rsync -r ./build/ /data"
+    "deploy": "npm run build && rsync -r ./build/ /var/www/html"
   }
 }
