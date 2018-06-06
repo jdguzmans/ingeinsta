@@ -18,8 +18,8 @@ class App extends Component {
       types: []
     }
 
-    this.backURL = 'http://localhost:3000'
-    // this.backURL = 'https://www.ret-solutions.com:3333'
+    // this.backURL = 'http://localhost:3000'
+    this.backURL = 'https:/ingeinsta.com'
 
     this.isMobile = navigator.platform.includes('Android') || navigator.platform.includes('iPhone')
 
