@@ -7,7 +7,8 @@ export class Map extends Component {
     this.google = window.google
 
     this.state = {
-      points: []
+      points: [],
+      currentPosMarker: null
     }
   }
 
@@ -24,7 +25,9 @@ export class Map extends Component {
   componentDidUpdate (prevProps, prevState) {
     // WHAT HAPPENS IF THE PERSON MOVES?
     if (this.props.currentPosition) {
-      let marker = new this.google.maps.Marker({
+      if (prevState.currentPosMarker) prevState.currentPosMarker.setMap(null)
+
+      let currentPosMarker = new this.google.maps.Marker({
         position: {
           lat: this.props.currentPosition.latitude,
           lng: this.props.currentPosition.longitude
@@ -32,11 +35,15 @@ export class Map extends Component {
         map: this.map,
         icon: this.props.icons['currentPosition']
       })
-      marker.addListener('click', (e) => {
+      currentPosMarker.addListener('click', (e) => {
         let infowindow = new this.google.maps.InfoWindow({
           content: 'Usted está acá'
         })
-        infowindow.open(this.map, marker)
+        infowindow.open(this.map, currentPosMarker)
+      })
+
+      this.setState({
+        currentPosMarker: currentPosMarker
       })
     }
 
