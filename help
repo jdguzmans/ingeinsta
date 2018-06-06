@@ -1,4 +1,9 @@
+para el deploy
+	- en el front ponerle a apuntar al back
+
 /etc/nginx
+
+https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-16-04
 
 https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-18-04
 
