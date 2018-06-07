@@ -19,7 +19,7 @@ class App extends Component {
     }
 
     // this.backURL = 'http://localhost:3000'
-    this.backURL = 'https:/ingeinsta.com'
+    this.backURL = 'https://api.ingeinsta.com'
 
     this.isMobile = navigator.platform.includes('Android') || navigator.platform.includes('iPhone')
 
