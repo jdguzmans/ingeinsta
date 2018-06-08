@@ -59,7 +59,8 @@ export class Map extends Component {
         lng: lng
       },
       animation: window.google.maps.Animation.DROP,
-      map: this.map
+      map: this.map,
+      icon: this.props.uploadPointIcon
     })
 
     this.setState({
