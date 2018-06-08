@@ -36,6 +36,8 @@ class App extends Component {
       navigator.geolocation.watchPosition(
       (pos) => {
         if (this.state.currentPosition) {
+          console.log(pos)
+          console.log(pos.coords)
           console.log(pos.coords.lat)
           console.log(this.state.currentPosition.lat)
           console.log(pos.coords.lng)
