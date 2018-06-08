@@ -23,9 +23,6 @@ class App extends Component {
 
     this.isMobile = navigator.platform.includes('Android') || navigator.platform.includes('iPhone')
 
-    console.log((this.isMobile ? 'is' : 'not') + ' mobile')
-    console.log((navigator.geolocation ? 'has' : 'not') + ' GPS')
-
     this.icons = {
       currentPosition: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Ball-Chartreuse.png',
       'Espacio público': 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Marker-Inside-Pink.png',
@@ -53,6 +50,8 @@ class App extends Component {
       <div className='app container-fluid' >
         <div className='container-fluid first-panel centered'>
           <h1>Ingeninsta</h1>
+          <h3>{(this.isMobile ? 'is' : 'not') + ' mobile'}</h3>
+          <h3>{(this.state.currentPosition ? 'has' : 'not') + ' GPS'}</h3>
         </div>
         <div className='container-fluid second-panel centered'>
           <h3>Acá va una descripción, zolo miyoz, Duque es el que es</h3>
@@ -70,8 +69,8 @@ class App extends Component {
         }
         <div className='row fourth-panel container-fluid'>
           <Upload
-            canUpload={(this.isMobile && navigator.geolocation)}
-            // canUpload={true || (this.isMobile && navigator.geolocation)}
+            canUpload={(this.isMobile && this.state.currentPosition)}
+            // canUpload
             currentPosition={this.state.currentPosition ? this.state.currentPosition : {
               lat: 4.691668,
               lng: -74.0694933
