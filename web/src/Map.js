@@ -25,14 +25,19 @@ export class Map extends Component {
 
   componentDidUpdate (prevProps, prevState) {
     if (this.props.currentPosition) {
-      if (prevState.currentPosMarker) prevState.currentPosMarker.setMap(null)
+      let animation = window.google.maps.Animation.DROP
+
+      if (prevState.currentPosMarker) {
+        prevState.currentPosMarker.setMap(null)
+        animation = null
+      }
 
       let currentPosMarker = new window.google.maps.Marker({
         position: {
           lat: this.props.currentPosition.latitude,
           lng: this.props.currentPosition.longitude
         },
-        animation: window.google.maps.Animation.DROP,
+        animation: animation,
         map: this.map,
         icon: this.props.icons['currentPosition']
       })
