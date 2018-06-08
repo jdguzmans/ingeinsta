@@ -36,17 +36,21 @@ class App extends Component {
       navigator.geolocation.watchPosition(
       (pos) => {
         if (this.state.currentPosition) {
-          console.log(pos)
-          console.log(pos.coords)
-          console.log(pos.coords.lat)
+          console.log(pos.coords.latitude)
           console.log(this.state.currentPosition.lat)
-          console.log(pos.coords.lng)
+          console.log(pos.coords.longitude)
           console.log(this.state.currentPosition.lng)
         }
 
-        if (!this.state.currentPosition || (pos.coords.lat !== this.state.currentPosition.lat && pos.coords.lng !== this.state.currentPosition.lng)) {
+        let lat = pos.coords.latitude
+        let lng = pos.coords.longitude
+
+        if (!this.state.currentPosition || (pos.coords.latitude !== this.state.currentPosition.lat && pos.coords.longitude !== this.state.currentPosition.lng)) {
           this.setState({
-            currentPosition: pos.coords
+            currentPosition: {
+              lat: lat,
+              lng: lng
+            }
           })
         }
       })
