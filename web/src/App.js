@@ -50,7 +50,7 @@ class App extends Component {
       <div className='app container-fluid' >
         <div className='container-fluid first-panel centered'>
           <h1>Ingeninsta</h1>
-          <h3>{(this.isMobile ? 'is' : 'not') + ' mobile'}</h3>
+          <h3>{(this.isMobile ? 'is' : navigator.platform + ' - not') + ' mobile'}</h3>
           <h3>{(this.state.currentPosition ? 'has' : 'not') + ' GPS'}</h3>
         </div>
         <div className='container-fluid second-panel centered'>
