@@ -20,13 +20,11 @@ app.use(express.static(path.join(__dirname, 'public')))
 const AWS = require('aws-sdk')
 AWS.config.loadFromPath('./awsConfig.json')
 
-mongoCLient.connect(
-  'mongodb://' + config.db.user + ':' + config.db.password + '@' + config.db.url + ':' + config.db.port + '/' + config.db.name
-  , (err, db) => {
-    if (err) throw err
-    else console.log('connected to DB server\n')
-    db.close()
-  }
+mongoCLient.connect(config.db.uri, (err, db) => {
+  if (err) throw err
+  else console.log('connected to DB server\n')
+  db.close()
+}
 )
 
 let routes = fs.readdirSync('./routes')
