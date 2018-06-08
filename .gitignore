@@ -1,5 +1,6 @@
 v8-compile-cache-0
 config.js
+awsConfig.json
 
 # Logs
 logs

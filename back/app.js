@@ -17,6 +17,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
+const AWS = require('aws-sdk')
+AWS.config.loadFromPath('./awsConfig.json')
+
 mongoCLient.connect(
   'mongodb://' + config.db.user + ':' + config.db.password + '@' + config.db.url + ':' + config.db.port + '/' + config.db.name
   , (err, db) => {
