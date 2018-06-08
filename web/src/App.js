@@ -38,10 +38,10 @@ class App extends Component {
         let lat = pos.coords.latitude
         let lng = pos.coords.longitude
 
-        let changedLat = Math.abs(lat - this.state.currentPosition.lat) > 0.0000005
-        let changedLng = Math.abs(lng - this.state.currentPosition.lng) > 0.0000005
+        let changedLat = !this.state.currentPosition || Math.abs(lat - this.state.currentPosition.lat) > 0.0000005
+        let changedLng = !this.state.currentPosition || Math.abs(lng - this.state.currentPosition.lng) > 0.0000005
 
-        if (!this.state.currentPosition || changedLat || changedLng) {
+        if (changedLat || changedLng) {
           this.setState({
             currentPosition: {
               lat: lat,
