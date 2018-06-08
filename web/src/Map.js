@@ -37,6 +37,10 @@ export class Map extends Component {
         icon: this.props.icons['currentPosition']
       })
 
+      this.setState({
+        currentPosMarker: currentPosMarker
+      })
+
       currentPosMarker.addListener('click', (e) => {
         let infowindow = new window.google.maps.InfoWindow({
           content: 'Usted está acá'

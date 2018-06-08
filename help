@@ -13,3 +13,6 @@ https://webmasters.stackexchange.com/questions/104878/in-what-path-i-can-find-th
 https://chase-seibert.github.io/blog/2011/12/21/nginx-ssl-reverse-proxy-tutorial.html
 
 npm install pm2 -g
+
+sudo nginx -t
+sudo systemctl reload nginx
