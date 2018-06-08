@@ -45,6 +45,12 @@ router.post('/', upload.any(), (req, res, next) => {
     })
   })
 
+  console.log(description)
+  console.log(type)
+  console.log(lat)
+  console.log(lng)
+  console.log(information)
+
   pointsLogic.insertPoint(description, type, lat, lng, information)
   .then(point => {
     res.send(point)

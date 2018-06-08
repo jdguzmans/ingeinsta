@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import whilst from 'async/whilst'
 
+import UploadMap from './UploadMap'
 // https://gist.github.com/hartzis/0b77920380736f98e4f9
 
 export class Upload extends Component {
@@ -13,7 +14,9 @@ export class Upload extends Component {
       type: null,
       images: null,
       imagePreviewURLs: null,
-      selectedImageCarouselIndex: null
+      selectedImageCarouselIndex: null,
+      lat: null,
+      lng: null
     }
 
     this.changedDescription = this.changedDescription.bind(this)
@@ -24,7 +27,15 @@ export class Upload extends Component {
     this.renderUploadImages = this.renderUploadImages.bind(this)
     this.nextImageInCarrousel = this.nextImageInCarrousel.bind(this)
     this.previousImageInCarrousel = this.previousImageInCarrousel.bind(this)
+    this.handlePositionChange = this.handlePositionChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  handlePositionChange (lat, lng) {
+    this.setState({
+      lat: lat,
+      lng: lng
+    })
   }
 
   handleSubmit (e) {
@@ -33,8 +44,8 @@ export class Upload extends Component {
     let point = {
       description: this.state.description,
       type: this.state.type,
-      lat: this.props.currentPosition.lat,
-      lng: this.props.currentPosition.lng,
+      lat: this.state.lat,
+      lng: this.state.lng,
       information: {
         images: this.state.images
       }
@@ -139,64 +150,61 @@ export class Upload extends Component {
         <div className='centered title'>
           <h3>Suba Puntos</h3>
         </div>
-        <div className='centered' >
-          <h5>Sólo se permite crear puntos desde un dispositivo móvil, con fotografías tomadas instantánemente.</h5>
-        </div>
-        {this.props.canUpload &&
-          <form onSubmit={this.handleSubmit}>
-            <div className='container-fluid'>
-              <div className='row container-fluid padding-top'>
-                <div className='col-sm-4 container-fluid centered'>
-                  <label htmlFor='upload-description'>Descripción (máximo 50 caracteres)</label>
-                </div>
-                <div className='col-sm-8 container-fluid'>
-                  <textarea className='form-control' id='upload-description' rows='2' maxLength='50' value={this.state.description} onChange={this.changedDescription} />
-                </div>
+        <div className='container-fluid padding-top'>
+          <div className='row container-fluid'>
+            <div className='col-sm-6 container-fluid'>
+              <div className='container-fluid centered'>
+                <label htmlFor='upload-description'>Descripción (máximo 50 caracteres)</label>
+                <textarea className='form-control' id='upload-description' rows='2' maxLength='50' value={this.state.description} onChange={this.changedDescription} />
               </div>
-              <div className='row container-fluid padding-top'>
-                <div className='col-sm-4 container-fluid centered'>
-                  <label htmlFor='upload-description'>Tipo</label>
-                </div>
-                <div className='col-sm-8 container-fluid centered'>
-                  {this.renderTypes()}
-                </div>
-              </div>
-              <div className='row container-fluid padding-top'>
-                <div className='col-sm-4 container-fluid centered'>
-                  <label>Imágenes</label>
-                </div>
-                <div className='col-sm-8 container-fluid centered'>
-                  <div className='row form-group container-fluid'>
-                    <input type='file' className='form-control-file' onChange={this.handleImageChange} accept='.jpg, .jpeg, .png' multiple />
-                  </div>
-                  {this.state.images &&
-                  <div className='carousel slide' data-ride='carousel'>
-                    <ol className='carousel-indicators'>
-                      {this.renderCarouselIndicators()}
-                    </ol>
-                    <div className='carousel-inner'>
-                      {this.renderUploadImages()}
-                    </div>
-                    <a className='carousel-control-prev' data-slide='prev' onClick={this.previousImageInCarrousel}>
-                      <span className='carousel-control-prev-icon' aria-hidden='true' />
-                      <span className='sr-only'>Anterior</span>
-                    </a>
-                    <a className='carousel-control-next' data-slide='next' onClick={this.nextImageInCarrousel}>
-                      <span className='carousel-control-next-icon' aria-hidden='true' />
-                      <span className='sr-only'>Siguiente</span>
-                    </a>
-                  </div>
-                  }
-                </div>
-                <div className='row container-fluid padding-bottom'>
-                  <div className='form-group offset-sm-4 col-sm-8' >
-                    <button className='btn' type='submit' onClick={this.handleSubmit} disabled={!this.state.description || this.state.description.length === 0 || !this.state.type || !this.state.images}>Subir punto</button>
-                  </div>
-                </div>
+              <div className='container-fluid padding-top centered'>
+                <label htmlFor='upload-description'>Tipo</label>
+                {this.renderTypes()}
               </div>
             </div>
-          </form>
-        }
+            <div className='col-sm-6 container-fluid'>
+              <UploadMap
+                uploadPointIcon={this.props.uploadPointIcon}
+                currentPosition={this.props.currentPosition}
+                handlePositionChange={this.handlePositionChange}
+            />
+            </div>
+          </div>
+        </div>
+
+        <div className='row container-fluid padding-top'>
+          <div className='col-sm-4 container-fluid centered'>
+            <label>Imágenes</label>
+          </div>
+          <div className='col-sm-8 container-fluid centered'>
+            <div className='row form-group container-fluid'>
+              <input type='file' className='form-control-file' onChange={this.handleImageChange} accept='.jpg, .jpeg, .png' multiple />
+            </div>
+            {this.state.images &&
+              <div className='carousel slide' data-ride='carousel'>
+                <ol className='carousel-indicators'>
+                  {this.renderCarouselIndicators()}
+                </ol>
+                <div className='carousel-inner'>
+                  {this.renderUploadImages()}
+                </div>
+                <a className='carousel-control-prev' data-slide='prev' onClick={this.previousImageInCarrousel}>
+                  <span className='carousel-control-prev-icon' aria-hidden='true' />
+                  <span className='sr-only'>Anterior</span>
+                </a>
+                <a className='carousel-control-next' data-slide='next' onClick={this.nextImageInCarrousel}>
+                  <span className='carousel-control-next-icon' aria-hidden='true' />
+                  <span className='sr-only'>Siguiente</span>
+                </a>
+              </div>
+                }
+          </div>
+          <div className='row container-fluid padding-top padding-bottom'>
+            <div className='form-group offset-sm-4 col-sm-8' >
+              <button className='btn btn-primary' type='button' onClick={this.handleSubmit} disabled={!this.state.description || this.state.description.length === 0 || !this.state.type || !this.state.images}>Subir punto</button>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }

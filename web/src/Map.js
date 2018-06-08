@@ -7,7 +7,6 @@ export class Map extends Component {
 
     this.state = {
       points: [],
-      currentPosMarker: null,
       selectedMarkerId: null,
       selectedMarkerInfoWindow: null
     }
@@ -24,41 +23,6 @@ export class Map extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    if (this.props.currentPosition) {
-      let animation = window.google.maps.Animation.DROP
-
-      if (prevState.currentPosMarker) {
-        prevState.currentPosMarker.setMap(null)
-        animation = null
-      }
-
-      let currentPosMarker = new window.google.maps.Marker({
-        position: {
-          lat: this.props.currentPosition.latitude,
-          lng: this.props.currentPosition.longitude
-        },
-        animation: animation,
-        map: this.map,
-        icon: this.props.icons['currentPosition']
-      })
-
-      this.setState({
-        currentPosMarker: currentPosMarker
-      })
-
-      currentPosMarker.addListener('click', (e) => {
-        let infowindow = new window.google.maps.InfoWindow({
-          content: 'Usted está acá'
-        })
-        infowindow.open(this.map, currentPosMarker)
-        currentPosMarker.setAnimation(window.google.maps.Animation.BOUNCE)
-
-        setTimeout(() => {
-          currentPosMarker.setAnimation(null)
-        }, 3000)
-      })
-    }
-
     this.props.points.forEach(point => {
       if (!prevProps.points.includes(point)) {
         let marker = new window.google.maps.Marker({

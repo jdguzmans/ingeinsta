@@ -21,10 +21,8 @@ class App extends Component {
     // this.backURL = 'http://localhost:3000'
     this.backURL = 'https://api.ingeinsta.com'
 
-    this.isMobile = navigator.platform.includes('Android') || navigator.platform.includes('iPhone')
-
     this.icons = {
-      currentPosition: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Ball-Chartreuse.png',
+      newPoint: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Ball-Chartreuse.png',
       'Espacio público': 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Marker-Inside-Pink.png',
       Pavimento: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Marker-Outside-Azure.png'
     }
@@ -37,9 +35,18 @@ class App extends Component {
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition(
       (pos) => {
-        this.setState({
-          currentPosition: pos.coords
-        })
+        if (this.state.currentPosition) {
+          console.log(pos.coords.lat)
+          console.log(this.state.currentPosition.lat)
+          console.log(pos.coords.lng)
+          console.log(this.state.currentPosition.lng)
+        }
+
+        if (!this.state.currentPosition || (pos.coords.lat !== this.state.currentPosition.lat && pos.coords.lng !== this.state.currentPosition.lng)) {
+          this.setState({
+            currentPosition: pos.coords
+          })
+        }
       })
     }
     this.getTypesAndPoints()
@@ -50,8 +57,6 @@ class App extends Component {
       <div className='app container-fluid' >
         <div className='container-fluid first-panel centered'>
           <h1>Ingeninsta</h1>
-          <h3>{(this.isMobile ? 'is' : navigator.platform + ' - not') + ' mobile'}</h3>
-          <h3>{(this.state.currentPosition ? 'has' : 'not') + ' GPS'}</h3>
         </div>
         <div className='container-fluid second-panel centered'>
           <h3>Acá va una descripción, zolo miyoz, Duque es el que es</h3>
@@ -69,14 +74,10 @@ class App extends Component {
         }
         <div className='row fourth-panel container-fluid'>
           <Upload
-            canUpload={(this.isMobile && this.state.currentPosition)}
-            // canUpload
-            currentPosition={this.state.currentPosition ? this.state.currentPosition : {
-              lat: 4.691668,
-              lng: -74.0694933
-            }}
+            currentPosition={this.state.currentPosition}
             types={this.state.types}
             uploadPoint={this.uploadPoint}
+            uploadPointIcon={this.icons['newPoint']}
           />
         </div>
       </div>
@@ -97,14 +98,10 @@ class App extends Component {
     fetch(this.backURL + '/points', {
       mode: 'cors',
       method: 'POST',
-      // headers: {
-      //   // 'content-type': 'application/json'
-      //   'content-type': 'multipart/form-data'
-      // },
       body: data
     })
     .then(response => {
-
+      this.getTypesAndPoints()
     })
   }
 
