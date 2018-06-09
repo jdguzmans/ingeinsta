@@ -7,14 +7,14 @@ const MongoCLient = require('mongodb').MongoClient
 //   let types = [{
 //     name: 'Pavimento'
 //   }, {
-//     name: 'Agua'
+//     name: 'Espacio Público'
 //   }]
 
 //   MongoCLient.connect(config.db.uri,
 //     (err, client) => {
 //       if (err) throw err
 //       else {
-//         let Types = client.db('ingenieria-visible').collection('types')
+//         let Types = client.db(config.db.name).collection('types')
 //         Types.insertMany(types,
 //         (err) => {
 //           if (err) throw err
@@ -35,7 +35,7 @@ exports.findAllTypes = () => {
       (err, client) => {
         if (err) reject(err)
         else {
-          let Types = client.db('ingenieria-visible').collection('types')
+          let Types = client.db(config.db.name).collection('types')
           Types.find({})
           .toArray(
           (err, types) => {
@@ -62,7 +62,7 @@ exports.insertType = (name) => {
         (err, client) => {
           if (err) reject(err)
           else {
-            let Types = client.db('ingenieria-visible').collection('types')
+            let Types = client.db(config.db.name).collection('types')
             Types.insertOne({
               name: name
             }, (err) => {

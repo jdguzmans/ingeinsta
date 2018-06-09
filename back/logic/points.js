@@ -15,7 +15,7 @@ exports.findAllPoints = () => {
       (err, client) => {
         if (err) reject(err)
         else {
-          let Points = client.db('ingenieria-visible').collection('points')
+          let Points = client.db(config.db.name).collection('points')
           Points.find({})
           .toArray(
           (err, points) => {
@@ -58,7 +58,7 @@ exports.insertPoint = (description, type, lat, lng, information) => {
         (err, client) => {
           if (err) reject(err)
           else {
-            let Types = client.db('ingenieria-visible').collection('types')
+            let Types = client.db(config.db.name).collection('types')
             Types.findOne({_id: ObjectId(type)},
             (err, res) => {
               if (err) {
@@ -68,7 +68,7 @@ exports.insertPoint = (description, type, lat, lng, information) => {
                 reject(new Error('Tipo inválido'))
                 client.close()
               } else {
-                let Points = client.db('ingenieria-visible').collection('points')
+                let Points = client.db(config.db.name).collection('points')
                 Points.insertOne({
                   description: description,
                   type: type,
@@ -91,7 +91,7 @@ exports.insertPoint = (description, type, lat, lng, information) => {
                       })
                       image.index = index
                     })
-                    let PointInformation = client.db('ingenieria-visible').collection('pointInformation')
+                    let PointInformation = client.db(config.db.name).collection('pointInformation')
                     PointInformation.insertOne({
                       _id: ObjectId(insertedId),
                       images: images
