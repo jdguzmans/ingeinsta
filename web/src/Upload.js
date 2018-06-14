@@ -201,7 +201,7 @@ export class Upload extends Component {
           </div>
           <div className='row container-fluid padding-top padding-bottom'>
             <div className='form-group offset-sm-4 col-sm-8' >
-              <button className='btn btn-primary' type='button' onClick={this.handleSubmit} disabled={!this.state.description || this.state.description.length === 0 || !this.state.type || !this.state.images}>Subir punto</button>
+              <button className='btn btn-primary btn-sm' type='button' onClick={this.handleSubmit} disabled={!this.state.description || this.state.description.length === 0 || !this.state.type || !this.state.images}>Subir punto</button>
             </div>
           </div>
         </div>

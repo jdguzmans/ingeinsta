@@ -24,7 +24,6 @@ export class NavigationMap extends Component {
     this.setState({
       markers: []
     })
-    console.log('mapa listo')
   }
 
   componentDidUpdate (prevProps, prevState) {

@@ -78,7 +78,7 @@ export class Map extends Component {
         </div>
         <div ref={this.uploadMapRef} id='upload-map' />
         <div className='col-sm-4 offset-sm-3'>
-          <button type='button' className='btn btn-secondary' onClick={this.useCurrentPositionCoords} disabled={!this.props.currentPosition}>Utilizar mi posición actual</button>
+          <button type='button' className='btn btn-secondary btn-sm' onClick={this.useCurrentPositionCoords} disabled={!this.props.currentPosition}>Utilizar mi posición actual</button>
         </div>
       </div>
     )

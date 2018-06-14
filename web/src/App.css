@@ -9,11 +9,6 @@ html, body {
     padding: 0em;
 }
 
-.first-panel, .second-panel, .third-panel, .fourth-panel, .fifth-panel {  
-    margin: 0em;
-    padding: 0.8em;
-}
-
 .centered {
     text-align: center;
     vertical-align: center;
@@ -48,17 +43,6 @@ html, body {
     width: 10em;
 }
 
-.anchor-link {
-    cursor:pointer;
-    color:blue;
-    text-decoration:underline;
-}
-
-.anchor-link:hover {
-    text-decoration:none;
-    text-shadow: 1px 1px 1px #555;
-}
-
 .carousel-control-prev, .carousel-control-next {
     cursor:pointer;
 }
@@ -70,3 +54,18 @@ html, body {
 .padding-bottom {
     padding-bottom: 1em;
 }
+
+.navbar {
+    background-color: #191B40;
+    margin-bottom: 1em;
+}
+
+a.navbar-brand:hoover {
+    cursor: pointer;
+}
+
+a.nav-link.selected {
+    /* No funciona */
+    color: rgba(255,255,255,.75);
+}
+

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import './Navbar.css'
 
 export default class Navbar extends Component {
   constructor (props) {
@@ -10,9 +9,10 @@ export default class Navbar extends Component {
   renderSections () {
     return this.props.sections.map((section, i, a) => {
       return (
-        <li key={i} className='nav-item active'>
+        <li key={i}>
           <a
-            className='nav-link'
+            className={'nav-link ' + (this.props.section === section ? 'selected' : '')}
+            href=''
             onClick={(e) => {
               e.preventDefault()
               this.props.changeSection(i)
@@ -25,14 +25,16 @@ export default class Navbar extends Component {
 
   render () {
     return (
-      <nav className='navbar navbar-expand-sm navbar-dark bg-dark '>
+      <nav className='navbar navbar-expand-sm navbar-dark'>
         <a
-          className='navbar-brand'
+          className={'navbar-brand ' + (this.props.section === 'Home' ? 'selected' : '')}
+          href=''
           onClick={(e) => {
             e.preventDefault()
             this.props.changeSection(this.props.sections.length)
           }}
-          >{this.props.title}
+        >
+          {this.props.title}
         </a>
         <button className='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation'>
           <span className='navbar-toggler-icon' />

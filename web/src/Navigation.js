@@ -116,7 +116,8 @@ export class Navigation extends Component {
     })
   }
 
-  getPointInformation () {
+  getPointInformation (e) {
+    e.preventDefault()
     if (!this.state.selectedPointInformation || this.state.selectedPoint._id !== this.state.selectedPointInformation._id) {
       fetch(this.props.backURL + '/points/' + this.state.selectedPoint._id + '/information', {
         mode: 'cors'

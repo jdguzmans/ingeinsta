@@ -58,7 +58,10 @@ export class Point extends Component {
           </div>
           <div className='col-sm-3'>
             <span className='anchor-link'>
-              <h4><a className='anchor-link' onClick={this.props.getPointInformation} >Conozca más</a></h4>
+              <h4><a href='' onClick={(e) => {
+                this.props.getPointInformation(e)
+              }} >
+                Conozca más</a></h4>
             </span>
           </div>
         </div>
