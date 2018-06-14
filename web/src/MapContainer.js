@@ -7,12 +7,20 @@ export class MapContainer extends Component {
   constructor (props) {
     super(props)
 
+    let types = {}
+    props.types.forEach(type => {
+      types[type._id] = true
+    })
+
     this.state = {
       selectedPoint: null,
-      selectedPointInformation: null
+      selectedPointInformation: null,
+      points: props.points,
+      types: types
     }
 
     this.renderFilters = this.renderFilters.bind(this)
+    this.changedChexBox = this.changedChexBox.bind(this)
     this.changeSelectedPoint = this.changeSelectedPoint.bind(this)
     this.getPointInformation = this.getPointInformation.bind(this)
   }
@@ -21,7 +29,7 @@ export class MapContainer extends Component {
     return (
       <div className='container-fluid row'>
         <div className='container-fluid col-sm-3 centered'>
-          <h3>Filtros</h3>
+          <h5>Filtros</h5>
         </div>
         <div className='container-fluid row col-sm-9'>
           {this.renderFilters()}
@@ -30,7 +38,7 @@ export class MapContainer extends Component {
           icons={this.props.icons}
           types={this.props.types}
           currentPosition={this.props.currentPosition}
-          points={this.props.points}
+          points={this.state.points}
           changeSelectedPoint={this.changeSelectedPoint}
         />
         {this.state.selectedPoint &&
@@ -62,11 +70,39 @@ export class MapContainer extends Component {
     return toReturn
   }
 
+  changedChexBox (e, id) {
+    let target = e.target
+    let value = target.type === 'checkbox' ? target.checked : target.value
+
+    let types = this.state.types
+    types[id] = value
+
+    let points = this.state.points
+    if (value) {
+      this.props.points.forEach(point => {
+        if (point.type._id === id) points.push(point)
+      })
+    } else {
+      points = this.state.points.filter(point => {
+        return point.type._id !== id
+      })
+    }
+    this.setState({
+      types: types,
+      points: points
+    })
+  }
+
   renderTypeFilter (type) {
     return (
       <div className='col-sm-6 form-check' >
-        <input className='form-check-input' type='checkbox' id='defaultCheck1' />
-        <label className='form-check-label' htmlFor='defaultCheck1'>
+        <input className='form-check-input'
+          type='checkbox'
+          checked={this.state.types[type._id]}
+          onChange={(e) => {
+            this.changedChexBox(e, type._id)
+          }} />
+        <label className='form-check-label'>
           {type.name}
         </label>
       </div>

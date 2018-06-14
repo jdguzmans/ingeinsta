@@ -4,6 +4,9 @@ import React, { Component } from 'react'
 
 import './App.css'
 
+import Navbar from './navbar/Navbar'
+
+import Home from './Home'
 import MapContainer from './MapContainer'
 import Upload from './Upload'
 
@@ -13,13 +16,17 @@ class App extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      section: 'Home',
       currentPosition: null,
       points: [],
       types: []
     }
 
-    // this.backURL = 'http://localhost:3000'
-    this.backURL = 'https://api.ingeinsta.com'
+    this.title = 'Ingeinsta'
+    this.sections = [ 'Navegar', 'Subir' ]
+
+    this.backURL = 'http://localhost:3000'
+    // this.backURL = 'https://api.ingeinsta.com'
 
     this.icons = {
       newPoint: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Ball-Chartreuse.png',
@@ -27,8 +34,15 @@ class App extends Component {
       Pavimento: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Marker-Outside-Azure.png'
     }
 
+    this.changeSection = this.changeSection.bind(this)
     this.getTypesAndPoints = this.getTypesAndPoints.bind(this)
     this.uploadPoint = this.uploadPoint.bind(this)
+  }
+
+  changeSection (newSectionNumber) {
+    this.setState({
+      section: newSectionNumber !== this.sections.length ? this.sections[newSectionNumber] : 'Home'
+    })
   }
 
   componentDidMount () {
@@ -57,31 +71,30 @@ class App extends Component {
   render () {
     return (
       <div className='app container-fluid' >
-        <div className='container-fluid first-panel centered'>
-          <h1>Ingeninsta</h1>
-        </div>
-        <div className='container-fluid second-panel centered'>
-          <h3>Acá va una descripción, zolo miyoz, Duque es el que es</h3>
-        </div>
-        {window.google &&
-        <div className='row third-panel container-fluid'>
-          <MapContainer
-            backURL={this.backURL}
-            icons={this.icons}
-            types={this.state.types}
-            currentPosition={this.state.currentPosition}
-            points={this.state.points}
-          />
-        </div>
-        }
-        <div className='row fourth-panel container-fluid'>
-          <Upload
-            currentPosition={this.state.currentPosition}
-            types={this.state.types}
-            uploadPoint={this.uploadPoint}
-            uploadPointIcon={this.icons['newPoint']}
-          />
-        </div>
+        <Navbar
+          title={this.title}
+          section={this.state.section}
+          sections={this.sections}
+          changeSection={this.changeSection}
+        />
+        {
+            this.state.section === 'Home'
+            ? <Home />
+            : this.state.section === this.sections[0]
+            ? <MapContainer
+              backURL={this.backURL}
+              icons={this.icons}
+              types={this.state.types}
+              currentPosition={this.state.currentPosition}
+              points={this.state.points}
+            />
+            : <Upload
+              currentPosition={this.state.currentPosition}
+              types={this.state.types}
+              uploadPoint={this.uploadPoint}
+              uploadPointIcon={this.icons['newPoint']}
+            />
+          }
       </div>
     )
   }
