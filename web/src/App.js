@@ -7,7 +7,7 @@ import './App.css'
 import Navbar from './navbar/Navbar'
 
 import Home from './Home'
-import MapContainer from './MapContainer'
+import Navigation from './Navigation'
 import Upload from './Upload'
 
 import parallel from 'async/parallel'
@@ -25,8 +25,8 @@ class App extends Component {
     this.title = 'Ingeinsta'
     this.sections = [ 'Navegar', 'Subir' ]
 
-    this.backURL = 'http://localhost:3000'
-    // this.backURL = 'https://api.ingeinsta.com'
+    // this.backURL = 'http://localhost:3000'
+    this.backURL = 'https://api.ingeinsta.com'
 
     this.icons = {
       newPoint: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Ball-Chartreuse.png',
@@ -81,7 +81,7 @@ class App extends Component {
             this.state.section === 'Home'
             ? <Home />
             : this.state.section === this.sections[0]
-            ? <MapContainer
+            ? <Navigation
               backURL={this.backURL}
               icons={this.icons}
               types={this.state.types}

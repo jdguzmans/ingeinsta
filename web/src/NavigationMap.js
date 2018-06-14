@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 
-export class Map extends Component {
+export class NavigationMap extends Component {
   constructor (props) {
     super(props)
     this.mapRef = React.createRef()
 
     this.state = {
-      points: [],
+      markers: [],
       selectedMarkerId: null,
       selectedMarkerInfoWindow: null
     }
@@ -20,27 +20,49 @@ export class Map extends Component {
         lng: -74.0524933
       }
     })
+
+    this.setState({
+      markers: []
+    })
+    console.log('mapa listo')
   }
 
   componentDidUpdate (prevProps, prevState) {
-    this.props.points.forEach(point => {
-      if (!prevProps.points.includes(point)) {
+    let change = false
+
+    if (prevProps.points.length !== this.props.points.length) change = true
+    if (this.props.points.length !== prevState.markers.length) change = true
+
+    for (let i = 0; i < prevProps.points.length; i++) {
+      change = change || prevProps.points[i] !== this.props.points[i]
+    }
+
+    if (change) {
+      this.state.markers.forEach(marker => {
+        marker.setMap(null)
+      })
+
+      let markers = []
+
+      this.props.points.forEach(newPoint => {
         let marker = new window.google.maps.Marker({
           position: {
-            lat: point.lat,
-            lng: point.lng
+            lat: newPoint.lat,
+            lng: newPoint.lng
           },
           animation: window.google.maps.Animation.DROP,
           map: this.map,
-          icon: this.props.icons[point.type.name]
+          icon: this.props.icons[newPoint.type.name]
         })
 
+        markers.push(marker)
+
         marker.addListener('click', (e) => {
-          if (!this.state.selectedMarkerId || this.state.selectedMarkerId !== point._id) {
+          if (!this.state.selectedMarkerId || this.state.selectedMarkerId !== newPoint._id) {
             if (this.state.selectedMarkerInfoWindow) this.state.selectedMarkerInfoWindow.close()
 
             let infowindow = new window.google.maps.InfoWindow({
-              content: point.description
+              content: newPoint.description
             })
             marker.setAnimation(window.google.maps.Animation.BOUNCE)
 
@@ -50,18 +72,19 @@ export class Map extends Component {
 
             infowindow.open(this.map, marker)
 
-            this.props.changeSelectedPoint(point)
+            this.props.changeSelectedPoint(newPoint)
 
             this.setState({
-              selectedMarkerId: point._id,
+              selectedMarkerId: newPoint._id,
               selectedMarkerInfoWindow: infowindow
             })
           }
         })
-      }
-    })
-
-    // WHAT HAPPENS IF A POINT IS DELETED?
+      })
+      this.setState({
+        markers: markers
+      })
+    }
   }
 
   render () {
@@ -71,4 +94,4 @@ export class Map extends Component {
   }
 }
 
-export default Map
+export default NavigationMap

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 
-import Map from './Map'
+import NavigationMap from './NavigationMap'
 import Point from './Point'
 
-export class MapContainer extends Component {
+export class Navigation extends Component {
   constructor (props) {
     super(props)
 
@@ -34,7 +34,7 @@ export class MapContainer extends Component {
         <div className='container-fluid row col-sm-9'>
           {this.renderFilters()}
         </div>
-        <Map
+        <NavigationMap
           icons={this.props.icons}
           types={this.props.types}
           currentPosition={this.props.currentPosition}
@@ -135,4 +135,4 @@ export class MapContainer extends Component {
   }
 }
 
-export default MapContainer
+export default Navigation
