@@ -14,11 +14,12 @@ export class NavigationMap extends Component {
 
   componentDidMount () {
     this.map = new window.google.maps.Map(this.mapRef.current, {
-      zoom: 13,
+      zoom: 12,
       center: {
-        lat: 4.687668,
+        lat: 4.607668,
         lng: -74.0524933
-      }
+      },
+      mapTypeId: window.google.maps.MapTypeId.HYBRID
     })
 
     this.setState({

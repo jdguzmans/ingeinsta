@@ -14,11 +14,12 @@ export class Map extends Component {
 
   componentDidMount () {
     let map = new window.google.maps.Map(this.uploadMapRef.current, {
-      zoom: 13,
+      zoom: 12,
       center: {
-        lat: 4.687668,
+        lat: 4.607668,
         lng: -74.0524933
-      }
+      },
+      mapTypeId: window.google.maps.MapTypeId.HYBRID
     })
 
     map.addListener('click', (e) => {
@@ -75,6 +76,9 @@ export class Map extends Component {
       <div className='container-fluid'>
         <div className='centered'>
           <label>Posición</label>
+        </div>
+        <div className='centered'>
+          <h6>Seleccione la ubicación manualmente o utilice la de su dispositivo</h6>
         </div>
         <div ref={this.uploadMapRef} id='upload-map' />
         <div className='col-sm-4 offset-sm-3'>
