@@ -100,23 +100,27 @@ class App extends Component {
   }
 
   uploadPoint (point) {
-    let data = new FormData()
-    data.append('description', point.description)
-    data.append('type', point.type)
-    data.append('lat', point.lat)
-    data.append('lng', point.lng)
+    return new Promise((resolve, reject) => {
+      let data = new FormData()
+      data.append('description', point.description)
+      data.append('type', point.type)
+      data.append('lat', point.lat)
+      data.append('lng', point.lng)
 
-    point.information.images.forEach((image, i) => {
-      data.append('information_images_' + i, image)
-    })
+      point.information.images.forEach((image, i) => {
+        data.append('information_images_' + i, image)
+      })
 
-    fetch(this.backURL + '/points', {
-      mode: 'cors',
-      method: 'POST',
-      body: data
-    })
-    .then(response => {
-      this.getTypesAndPoints()
+      fetch(this.backURL + '/points', {
+        mode: 'cors',
+        method: 'POST',
+        body: data
+      })
+      .then(response => {
+        this.getTypesAndPoints()
+        console.log(0)
+        resolve()
+      })
     })
   }
 

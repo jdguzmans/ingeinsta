@@ -25,15 +25,7 @@ export class Point extends Component {
           <div className='col-sm-6'>
             <div className='row'>
               <div className='col-sm-6'>
-                <h5>Identificador</h5>
-              </div>
-              <div className='col-sm-6'>
-                <h5>{this.props.selectedPoint._id}</h5>
-              </div>
-            </div>
-            <div className='row'>
-              <div className='col-sm-6'>
-                <h5>Tipo</h5>
+                <h5><b>Tipo</b></h5>
               </div>
               <div className='col-sm-6'>
                 <h5>{this.props.selectedPoint.type.name}</h5>
@@ -41,7 +33,7 @@ export class Point extends Component {
             </div>
             <div className='row'>
               <div className='col-sm-6'>
-                <h5>Descripción</h5>
+                <h5><b>Descripción</b></h5>
               </div>
               <div className='col-sm-6'>
                 <h5>{this.props.selectedPoint.description}</h5>
@@ -49,10 +41,18 @@ export class Point extends Component {
             </div>
             <div className='row'>
               <div className='col-sm-6'>
-                <h5>Fecha</h5>
+                <h5><b>Fecha</b></h5>
               </div>
               <div className='col-sm-6'>
                 <h5>{date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() }</h5>
+              </div>
+            </div>
+            <div className='row'>
+              <div className='col-sm-6'>
+                <h5><b>Identificador</b></h5>
+              </div>
+              <div className='col-sm-6'>
+                <h5>{this.props.selectedPoint._id}</h5>
               </div>
             </div>
           </div>

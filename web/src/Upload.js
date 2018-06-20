@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import whilst from 'async/whilst'
 
 import UploadMap from './UploadMap'
-// https://gist.github.com/hartzis/0b77920380736f98e4f9
+import Swal from 'sweetalert2'
 
 export class Upload extends Component {
   constructor (props) {
@@ -52,6 +52,18 @@ export class Upload extends Component {
     }
 
     this.props.uploadPoint(point)
+    .then(() => {
+      Swal('Pundo subido satisfactoriamente')
+      this.setState({
+        description: '',
+        type: null,
+        images: null,
+        imagePreviewURLs: null,
+        selectedImageCarouselIndex: null,
+        lat: null,
+        lng: null
+      })
+    })
   }
 
   handleImageChange (e) {
@@ -154,11 +166,11 @@ export class Upload extends Component {
           <div className='row container-fluid'>
             <div className='col-sm-6 container-fluid'>
               <div className='container-fluid centered'>
-                <label htmlFor='upload-description'>Descripción (máximo 50 caracteres)</label>
+                <label htmlFor='upload-description'><b>Descripción</b> (máximo 50 caracteres)</label>
                 <textarea className='form-control' id='upload-description' rows='2' maxLength='50' value={this.state.description} onChange={this.changedDescription} />
               </div>
               <div className='container-fluid padding-top centered'>
-                <label htmlFor='upload-description'>Tipo</label>
+                <label htmlFor='upload-description'><b>Tipo</b></label>
                 {this.renderTypes()}
               </div>
             </div>
@@ -174,7 +186,7 @@ export class Upload extends Component {
 
         <div className='row container-fluid padding-top'>
           <div className='col-sm-4 container-fluid centered'>
-            <label>Imágenes</label>
+            <label><b>Imágenes</b></label>
           </div>
           <div className='col-sm-8 container-fluid centered'>
             <div className='row form-group container-fluid'>

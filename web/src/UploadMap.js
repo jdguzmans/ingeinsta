@@ -75,7 +75,7 @@ export class Map extends Component {
     return (
       <div className='container-fluid'>
         <div className='centered'>
-          <label>Posición</label>
+          <label><b>Posición</b></label>
         </div>
         <div className='centered'>
           <h6>Seleccione la ubicación manualmente o utilice la de su dispositivo</h6>
