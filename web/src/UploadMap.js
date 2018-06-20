@@ -35,7 +35,7 @@ export class Map extends Component {
         },
         animation: window.google.maps.Animation.DROP,
         map: this.map,
-        icon: this.props.uploadPointIcon
+        icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
       })
 
       this.setState({

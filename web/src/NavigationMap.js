@@ -45,6 +45,11 @@ export class NavigationMap extends Component {
       let markers = []
 
       this.props.points.forEach(newPoint => {
+        let icon
+        this.props.types.forEach(type => {
+          icon = newPoint.type === type._id ? type.url : icon
+        })
+
         let marker = new window.google.maps.Marker({
           position: {
             lat: newPoint.lat,
@@ -52,7 +57,7 @@ export class NavigationMap extends Component {
           },
           animation: window.google.maps.Animation.DROP,
           map: this.map,
-          icon: this.props.icons[newPoint.type.name]
+          icon: icon
         })
 
         markers.push(marker)

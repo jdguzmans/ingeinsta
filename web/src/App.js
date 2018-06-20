@@ -28,12 +28,6 @@ class App extends Component {
     // this.backURL = 'http://localhost:3000'
     this.backURL = 'https://api.ingeinsta.com'
 
-    this.icons = {
-      newPoint: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Ball-Chartreuse.png',
-      'Espacio público': 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Marker-Inside-Pink.png',
-      Pavimento: 'https://cdn1.iconfinder.com/data/icons/Map-Markers-Icons-Demo-PNG/32/Map-Marker-Marker-Outside-Azure.png'
-    }
-
     this.changeSection = this.changeSection.bind(this)
     this.getTypesAndPoints = this.getTypesAndPoints.bind(this)
     this.uploadPoint = this.uploadPoint.bind(this)
@@ -83,7 +77,6 @@ class App extends Component {
             : this.state.section === this.sections[0]
             ? <Navigation
               backURL={this.backURL}
-              icons={this.icons}
               types={this.state.types}
               currentPosition={this.state.currentPosition}
               points={this.state.points}
@@ -92,7 +85,6 @@ class App extends Component {
               currentPosition={this.state.currentPosition}
               types={this.state.types}
               uploadPoint={this.uploadPoint}
-              uploadPointIcon={this.icons['newPoint']}
             />
           }
       </div>
@@ -118,7 +110,6 @@ class App extends Component {
       })
       .then(response => {
         this.getTypesAndPoints()
-        console.log(0)
         resolve()
       })
     })
@@ -138,8 +129,7 @@ class App extends Component {
             })
           } else console.log('Problems reaching the server')
         })
-      },
-      (cb) => {
+      }, (cb) => {
         fetch(this.backURL + '/points', {
           mode: 'cors'
         })
@@ -152,19 +142,12 @@ class App extends Component {
           } else console.log('Problems reaching the server')
         })
       }
-    ],
-    (err, res) => {
+    ], (err, res) => {
       if (err) console.log(err)
       else {
         let types = res[0]
-        let points = res[1].map(point => {
-          let type
-          types.forEach(t => {
-            type = t._id === point.type ? t : type
-          })
-          point.type = type
-          return point
-        })
+        let points = res[1]
+
         this.setState({
           types: types,
           points: points

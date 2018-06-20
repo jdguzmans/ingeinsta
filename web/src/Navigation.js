@@ -80,11 +80,11 @@ export class Navigation extends Component {
     let points = this.state.points
     if (value) {
       this.props.points.forEach(point => {
-        if (point.type._id === id) points.push(point)
+        if (point.type === id) points.push(point)
       })
     } else {
       points = this.state.points.filter(point => {
-        return point.type._id !== id
+        return point.type !== id
       })
     }
     this.setState({
@@ -105,6 +105,7 @@ export class Navigation extends Component {
         <label className='form-check-label'>
           {type.name}
         </label>
+        <img src={type.url} alt='filter' />
       </div>
     )
   }
