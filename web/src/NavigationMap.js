@@ -6,7 +6,6 @@ export class NavigationMap extends Component {
     this.mapRef = React.createRef()
 
     this.state = {
-      markers: [],
       selectedMarkerId: null,
       selectedMarkerInfoWindow: null
     }
@@ -21,30 +20,37 @@ export class NavigationMap extends Component {
       },
       mapTypeId: window.google.maps.MapTypeId.HYBRID
     })
-
     this.setState({
-      markers: []
+      markers: {}
     })
   }
 
   componentDidUpdate (prevProps, prevState) {
     let change = false
 
-    if (prevProps.points.length !== this.props.points.length) change = true
-    if (this.props.points.length !== prevState.markers.length) change = true
+    let markers = this.state.markers
 
-    for (let i = 0; i < prevProps.points.length; i++) {
-      change = change || prevProps.points[i] !== this.props.points[i]
-    }
-
-    if (change) {
-      this.state.markers.forEach(marker => {
-        marker.setMap(null)
+    for (let markerId in markers) {
+      let deleted = true
+      this.props.points.forEach(newPoint => {
+        deleted = deleted && newPoint._id !== markerId
       })
 
-      let markers = []
+      if (deleted) {
+        change = true
+        markers[markerId].setMap(null)
+        delete markers[markerId]
+      }
+    }
 
-      this.props.points.forEach(newPoint => {
+    this.props.points.forEach(newPoint => {
+      let created = true
+      for (let markerId in markers) {
+        created = created && newPoint._id !== markerId
+      }
+
+      if (created) {
+        change = true
         let icon
         this.props.types.forEach(type => {
           icon = newPoint.type === type._id ? type.url : icon
@@ -59,8 +65,7 @@ export class NavigationMap extends Component {
           map: this.map,
           icon: icon
         })
-
-        markers.push(marker)
+        markers[newPoint._id] = marker
 
         marker.addListener('click', (e) => {
           if (!this.state.selectedMarkerId || this.state.selectedMarkerId !== newPoint._id) {
@@ -85,7 +90,9 @@ export class NavigationMap extends Component {
             })
           }
         })
-      })
+      }
+    })
+    if (change) {
       this.setState({
         markers: markers
       })

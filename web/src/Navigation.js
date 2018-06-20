@@ -35,7 +35,6 @@ export class Navigation extends Component {
           {this.renderFilters()}
         </div>
         <NavigationMap
-          icons={this.props.icons}
           types={this.props.types}
           currentPosition={this.props.currentPosition}
           points={this.state.points}
@@ -44,6 +43,7 @@ export class Navigation extends Component {
         {this.state.selectedPoint &&
         <div className='point'>
           <Point
+            types={this.props.types}
             selectedPoint={this.state.selectedPoint}
             getPointInformation={this.getPointInformation}
             selectedPointInformation={this.state.selectedPointInformation}

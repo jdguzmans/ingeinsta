@@ -16,6 +16,11 @@ export class Point extends Component {
 
   render () {
     let date = new Date(this.props.selectedPoint.date)
+    let type
+    this.props.types.forEach(t => {
+      type = t._id === this.props.selectedPoint.type ? t : type
+    })
+
     return (
       <div>
         <div className='container-fluid row centered' >
@@ -28,7 +33,7 @@ export class Point extends Component {
                 <h5><b>Tipo</b></h5>
               </div>
               <div className='col-sm-6'>
-                <h5>{this.props.selectedPoint.type.name}</h5>
+                <h5>{type.name}</h5>
               </div>
             </div>
             <div className='row'>
