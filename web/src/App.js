@@ -20,7 +20,7 @@ class App extends Component {
       currentPosition: null,
       points: [],
       types: [],
-      loading: false
+      loading: true
     }
 
     this.title = 'Ingeinsta'
