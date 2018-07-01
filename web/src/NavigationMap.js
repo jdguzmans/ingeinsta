@@ -78,7 +78,7 @@ export class NavigationMap extends Component {
 
             setTimeout(() => {
               marker.setAnimation(null)
-            }, 3000)
+            }, 2000)
 
             infowindow.open(this.map, marker)
 

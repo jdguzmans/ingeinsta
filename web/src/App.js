@@ -19,18 +19,33 @@ class App extends Component {
       section: 'Home',
       currentPosition: null,
       points: [],
-      types: []
+      types: [],
+      loading: false
     }
 
     this.title = 'Ingeinsta'
     this.sections = [ 'Navegar', 'Subir' ]
 
-    // this.backURL = 'http://localhost:3000'
-    this.backURL = 'https://api.ingeinsta.com'
+    this.backURL = 'http://localhost:3000'
+    // this.backURL = 'https://api.ingeinsta.com'
 
     this.changeSection = this.changeSection.bind(this)
     this.getTypesAndPoints = this.getTypesAndPoints.bind(this)
+    this.startLoading = this.startLoading.bind(this)
+    this.finishLoading = this.finishLoading.bind(this)
     this.uploadPoint = this.uploadPoint.bind(this)
+  }
+
+  startLoading () {
+    this.setState({
+      loading: true
+    })
+  }
+
+  finishLoading () {
+    this.setState({
+      loading: false
+    })
   }
 
   changeSection (newSectionNumber) {
@@ -71,8 +86,11 @@ class App extends Component {
           sections={this.sections}
           changeSection={this.changeSection}
         />
+
         {
-            this.state.section === 'Home'
+          this.state.loading
+            ? <div className='loader' />
+            : this.state.section === 'Home'
             ? <Home />
             : this.state.section === this.sections[0]
             ? <Navigation
@@ -84,6 +102,8 @@ class App extends Component {
             : <Upload
               currentPosition={this.state.currentPosition}
               types={this.state.types}
+              startLoading={this.startLoading}
+              finishLoading={this.finishLoading}
               uploadPoint={this.uploadPoint}
             />
           }

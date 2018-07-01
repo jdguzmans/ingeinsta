@@ -40,6 +40,7 @@ export class Upload extends Component {
 
   handleSubmit (e) {
     e.preventDefault()
+    this.props.startLoading()
 
     let point = {
       description: this.state.description,
@@ -53,7 +54,7 @@ export class Upload extends Component {
 
     this.props.uploadPoint(point)
     .then(() => {
-      Swal('Pundo subido satisfactoriamente')
+      Swal('Punto subido satisfactoriamente')
       this.setState({
         description: '',
         type: null,
@@ -63,6 +64,7 @@ export class Upload extends Component {
         lat: null,
         lng: null
       })
+      this.props.finishLoading()
     })
   }
 

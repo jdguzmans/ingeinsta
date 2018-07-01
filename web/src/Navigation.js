@@ -28,6 +28,9 @@ export class Navigation extends Component {
   render () {
     return (
       <div className='container-fluid row'>
+        <div className='container-fluid centered'>
+          <h4>Cantidad total de puntos: {this.props.points.length}</h4>
+        </div>
         <div className='container-fluid col-sm-3 centered'>
           <h5>Filtros</h5>
         </div>
@@ -94,6 +97,11 @@ export class Navigation extends Component {
   }
 
   renderTypeFilter (type) {
+    let number = 0
+    this.props.points.forEach(point => {
+      number += point.type === type._id ? 1 : 0
+    })
+
     return (
       <div className='col-sm-6 form-check' >
         <input className='form-check-input'
@@ -103,7 +111,7 @@ export class Navigation extends Component {
             this.changedChexBox(e, type._id)
           }} />
         <label className='form-check-label'>
-          {type.name}
+          {type.name + ' (' + number + ')'}
         </label>
         <img src={type.url} alt='filter' />
       </div>
