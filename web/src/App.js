@@ -26,8 +26,8 @@ class App extends Component {
     this.title = 'Ingeinsta'
     this.sections = [ 'Navegar', 'Subir' ]
 
-    this.backURL = 'http://localhost:3000'
-    // this.backURL = 'https://api.ingeinsta.com'
+    // this.backURL = 'http://localhost:3000'
+    this.backURL = 'https://api.ingeinsta.com'
 
     this.changeSection = this.changeSection.bind(this)
     this.getTypesAndPoints = this.getTypesAndPoints.bind(this)
