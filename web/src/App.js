@@ -1,6 +1,7 @@
 /* global FormData */
 
 import React, { Component } from 'react'
+import { HashRouter as Router, Route } from 'react-router-dom'
 
 import './App.css'
 
@@ -19,33 +20,15 @@ class App extends Component {
       section: 'Home',
       currentPosition: null,
       points: [],
-      types: [],
-      loading: false
+      types: []
     }
-
-    this.title = 'Ingeinsta'
-    this.sections = [ 'Navegar', 'Subir' ]
 
     // this.backURL = 'http://localhost:3000'
     this.backURL = 'https://api.ingeinsta.com'
 
     this.changeSection = this.changeSection.bind(this)
     this.getTypesAndPoints = this.getTypesAndPoints.bind(this)
-    this.startLoading = this.startLoading.bind(this)
-    this.finishLoading = this.finishLoading.bind(this)
     this.uploadPoint = this.uploadPoint.bind(this)
-  }
-
-  startLoading () {
-    this.setState({
-      loading: true
-    })
-  }
-
-  finishLoading () {
-    this.setState({
-      loading: false
-    })
   }
 
   changeSection (newSectionNumber) {
@@ -79,35 +62,45 @@ class App extends Component {
 
   render () {
     return (
-      <div className='app container-fluid' >
-        <Navbar
-          title={this.title}
-          section={this.state.section}
-          sections={this.sections}
-          changeSection={this.changeSection}
-        />
-
-        {
-          this.state.loading
+      <Router>
+        <div className='app container-fluid' >
+          <Navbar
+            title={this.title}
+            section={this.state.section}
+            sections={this.sections}
+            changeSection={this.changeSection}
+          />
+          {this.state.loading
             ? <div className='loader' />
-            : this.state.section === 'Home'
-            ? <Home />
-            : this.state.section === this.sections[0]
-            ? <Navigation
-              backURL={this.backURL}
-              types={this.state.types}
-              currentPosition={this.state.currentPosition}
-              points={this.state.points}
-            />
-            : <Upload
-              currentPosition={this.state.currentPosition}
-              types={this.state.types}
-              startLoading={this.startLoading}
-              finishLoading={this.finishLoading}
-              uploadPoint={this.uploadPoint}
-            />
+            : <div>
+              <Route exact path='/' component={Home} />
+              <Route
+                path='/navigate'
+                render={(props) =>
+                  <Navigation
+                    {...props}
+                    backURL={this.backURL}
+                    types={this.state.types}
+                    currentPosition={this.state.currentPosition}
+                    points={this.state.points}
+                />
+                }
+              />
+              <Route
+                path='/upload'
+                render={(props) =>
+                  <Upload
+                    {...props}
+                    currentPosition={this.state.currentPosition}
+                    types={this.state.types}
+                    uploadPoint={this.uploadPoint}
+                  />
+                }
+              />
+            </div>
           }
-      </div>
+        </div>
+      </Router>
     )
   }
 
