@@ -179,17 +179,17 @@ export class Upload extends Component {
         { this.state.loading
         ? <div className='loader' />
         : <div className='container-fluid'>
-          <div className='centered title'>
+          <div className='centered-text title'>
             <h3>Suba Puntos</h3>
           </div>
           <div className='container-fluid padding-top'>
             <div className='row container-fluid'>
               <div className='col-sm-6 container-fluid'>
-                <div className='container-fluid centered'>
+                <div className='container-fluid centered-text'>
                   <label htmlFor='upload-description'><b>Descripción</b> (máximo 50 caracteres)</label>
                   <textarea className='form-control' id='upload-description' rows='2' maxLength='50' value={this.state.description} onChange={this.changedDescription} />
                 </div>
-                <div className='container-fluid padding-top centered'>
+                <div className='container-fluid padding-top centered-text'>
                   <label htmlFor='upload-description'><b>Tipo</b></label>
                   {this.renderTypes()}
                 </div>
@@ -205,10 +205,10 @@ export class Upload extends Component {
           </div>
 
           <div className='row container-fluid padding-top'>
-            <div className='col-sm-4 container-fluid centered'>
+            <div className='col-sm-4 container-fluid centered-text'>
               <label><b>Imágenes</b></label>
             </div>
-            <div className='col-sm-8 container-fluid centered'>
+            <div className='col-sm-8 container-fluid centered-text'>
               <div className='row form-group container-fluid'>
                 <input type='file' className='form-control-file' onChange={this.handleImageChange} accept='.jpg, .jpeg, .png' multiple />
               </div>

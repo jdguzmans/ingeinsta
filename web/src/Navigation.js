@@ -28,10 +28,10 @@ export class Navigation extends Component {
   render () {
     return (
       <div className='container-fluid row'>
-        <div className='container-fluid centered'>
+        <div className='container-fluid centered-text'>
           <h4>Cantidad total de puntos: {this.props.points.length}</h4>
         </div>
-        <div className='container-fluid col-sm-3 centered'>
+        <div className='container-fluid col-sm-3 centered-text'>
           <h5>Filtros</h5>
         </div>
         <div className='container-fluid row col-sm-9'>
@@ -63,7 +63,7 @@ export class Navigation extends Component {
     let i = 0
     while (i < this.props.types.length) {
       toReturn.push(
-        <div className='container-fluid row centered' key={i}>
+        <div className='container-fluid row centered-text' key={i}>
           {this.renderTypeFilter(this.props.types[i])}
           {(i + 1) < this.props.types.length ? this.renderTypeFilter(this.props.types[i + 1]) : ' '}
         </div>

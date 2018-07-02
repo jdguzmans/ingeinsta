@@ -4,14 +4,22 @@ html, body {
     padding: 0em;
 }
 
-.container, .container-fluid, .col-sm-6 {
+.container, .container-fluid, .col-sm-6, .col-sm-4 {
     margin: 0em;
     padding: 0em;
 }
 
-.centered {
+.centered-text {
     text-align: center;
     vertical-align: center;
+}
+
+.left-text {
+    text-align: left;
+}
+
+.right-text {
+    text-align: right;
 }
 
 #map {
