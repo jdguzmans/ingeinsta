@@ -157,7 +157,7 @@ export class Upload extends Component {
       let className = 'carousel-item ' + (i === this.state.selectedImageCarouselIndex ? 'active' : '')
       return (
         <div key={i} className={className}>
-          <img className='d-block w-100' src={url} alt={'Slide}' + i} />
+          <img className='d-block w-100' src={url} alt={'Slide ' + i} />
         </div>
       )
     })
@@ -216,7 +216,7 @@ export class Upload extends Component {
               <input type='file' className='form-control-file' onChange={this.handleImageChange} accept='.jpg, .jpeg, .png' multiple />
             </div>
             {this.state.images &&
-            <div className='carousel slide' data-ride='carousel'>
+            <div className='padding-top carousel slide' data-ride='carousel'>
               <ol className='carousel-indicators'>
                 {this.renderCarouselIndicators()}
               </ol>

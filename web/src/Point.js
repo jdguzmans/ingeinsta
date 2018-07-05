@@ -52,16 +52,8 @@ export class Point extends Component {
             </div>
           </div>
         </div>
-        <div className='padding-top centered-text'>
-          <span className='anchor-link'>
-            <h5><a href='' onClick={(e) => {
-              this.props.getPointInformation(e)
-            }} >
-                Conozca más</a></h5>
-          </span>
-        </div>
-        {this.props.selectedPointInformation &&
-        <div>
+        {this.props.selectedPointInformation
+        ? <div className='padding-top' >
           <div className='carousel slide' data-ride='carousel'>
             <ol className='carousel-indicators'>
               {this.renderCarouselIndicators()}
@@ -79,8 +71,16 @@ export class Point extends Component {
             </a>
           </div>
           <div className='padding-top centered-text'>
-            <h6><b>Id: </b>{this.props.selectedPoint._id}</h6>
+            <h6><i>Punto con identificador {this.props.selectedPoint._id}</i></h6>
           </div>
+        </div>
+        : <div className='padding-top centered-text'>
+          <span className='anchor-link'>
+            <h5><a href='' onClick={(e) => {
+              this.props.getPointInformation(e)
+            }} >
+              Conozca más</a></h5>
+          </span>
         </div>
         }
       </div>
@@ -93,11 +93,15 @@ export class Point extends Component {
       let className = 'carousel-item ' + (i === this.state.selectedImageCarouselIndex ? 'active' : '')
       let date = new Date(image.date)
       return (
-        <div key={i} className={className}>
-          <img className='d-block w-100' src={src} alt={'Slide}' + i} />
-          <div className='carousel-caption d-none d-md-block'>
-            <h5>Fecha: {date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() }</h5>
+        <div key={i}>
+          <div className={className}>
+            <img className='d-block w-100' src={src} alt={'Slide}' + i} />
           </div>
+          {i === this.state.selectedImageCarouselIndex &&
+          <div className='centered-text padding-top'>
+            <h6><b>Fecha de esta imagen:</b> {date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() }</h6>
+          </div>
+          }
         </div>
       )
     })
