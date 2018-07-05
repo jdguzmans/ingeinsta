@@ -177,11 +177,11 @@ export class Upload extends Component {
 
   returnEverything () {
     return (
-      <div>
+      <div className='container-fluid' >
         <div className='centered-text title'>
           <h3>Suba Puntos</h3>
         </div>
-        <div className='row'>
+        <div className='row container-fluid'>
           <div className='padding-top col-sm-6 container-fluid navigation-filters'>
             <div className='container-fluid centered-text'>
               <label htmlFor='upload-description'><b>Descripción</b> (máximo 50 caracteres)</label>

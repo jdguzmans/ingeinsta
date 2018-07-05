@@ -28,8 +28,6 @@ export class Map extends Component {
       let lat = coords.lat()
       let lng = coords.lng()
 
-      map.setCenter({lat: lat, lng: lng})
-
       let marker = new window.google.maps.Marker({
         position: {
           lat: lat,
@@ -56,6 +54,8 @@ export class Map extends Component {
     let lat = coords.lat
     let lng = coords.lng
 
+    this.map.setCenter({lat: lat, lng: lng})
+
     let marker = new window.google.maps.Marker({
       position: {
         lat: lat,
@@ -63,7 +63,7 @@ export class Map extends Component {
       },
       animation: window.google.maps.Animation.DROP,
       map: this.map,
-      icon: this.props.uploadPointIcon
+      icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
     })
 
     this.setState({
@@ -83,8 +83,11 @@ export class Map extends Component {
           <h6>Seleccione la ubicación manualmente o utilice la de su dispositivo</h6>
         </div>
         <div ref={this.uploadMapRef} id='upload-map' />
-        <div className='col-sm-4 offset-sm-3'>
-          <button type='button' className='btn btn-secondary btn-sm' onClick={this.useCurrentPositionCoords} disabled={!this.props.currentPosition}>Utilizar mi posición actual</button>
+        <div className='col-sm-6 offset-sm-6'>
+          {this.props.currentPosition
+        ? <button type='button' className='btn btn-secondary btn-sm' onClick={this.useCurrentPositionCoords} disabled={!this.props.currentPosition}>Utilizar mi posición actual</button>
+        : <label>Geolocalización deshabilitada</label>
+          }
         </div>
       </div>
     )
