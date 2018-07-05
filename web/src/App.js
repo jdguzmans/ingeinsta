@@ -63,7 +63,7 @@ class App extends Component {
   render () {
     return (
       <Router>
-        <div className='app container-fluid' >
+        <div className='app container-fluid padding-bottom' >
           <Navbar
             title={this.title}
             section={this.state.section}

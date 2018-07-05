@@ -19,7 +19,7 @@ export class Navigation extends Component {
       types: types
     }
 
-    this.renderFilters = this.renderFilters.bind(this)
+    this.renderFilters = this.renderTypeFilters.bind(this)
     this.changedChexBox = this.changedChexBox.bind(this)
     this.changeSelectedPoint = this.changeSelectedPoint.bind(this)
     this.getPointInformation = this.getPointInformation.bind(this)
@@ -27,37 +27,42 @@ export class Navigation extends Component {
 
   render () {
     return (
-      <div className='container-fluid row'>
-        <div className='container-fluid centered-text'>
-          <h4>Cantidad total de puntos: {this.props.points.length}</h4>
+      <div>
+        <div className='centered-text title'>
+          <h3>Navegue</h3>
         </div>
-        <div className='container-fluid col-sm-3 centered-text'>
-          <h5>Filtros</h5>
+        <div className='centered-text padding-top'>
+          <h5>Cantidad total de puntos: {this.props.points.length}</h5>
         </div>
-        <div className='container-fluid row col-sm-9'>
-          {this.renderFilters()}
-        </div>
-        <NavigationMap
-          types={this.props.types}
-          currentPosition={this.props.currentPosition}
-          points={this.state.points}
-          changeSelectedPoint={this.changeSelectedPoint}
+        <div className='row container-fluid padding-top navigation-filters'>
+          <div className='col-sm-2 centered-text'>
+            <h5><b>Filtros</b></h5>
+          </div>
+          <div className='padding-top row col-sm-10'>
+            {this.renderTypeFilters()}
+          </div>
+          <NavigationMap
+            types={this.props.types}
+            currentPosition={this.props.currentPosition}
+            points={this.state.points}
+            changeSelectedPoint={this.changeSelectedPoint}
         />
+        </div>
+
         {this.state.selectedPoint &&
-        <div className='point'>
           <Point
             types={this.props.types}
             selectedPoint={this.state.selectedPoint}
             getPointInformation={this.getPointInformation}
             selectedPointInformation={this.state.selectedPointInformation}
           />
-        </div>
         }
+
       </div>
     )
   }
 
-  renderFilters () {
+  renderTypeFilters () {
     let toReturn = []
 
     let i = 0
@@ -71,6 +76,36 @@ export class Navigation extends Component {
       i = i + 2
     }
     return toReturn
+  }
+
+  renderTypeFilter (type) {
+    let number = 0
+    this.props.points.forEach(point => {
+      number += point.type === type._id ? 1 : 0
+    })
+
+    return (
+      <div className='col-sm-6 row' >
+        <div className='col-5 offset-1 form-check left-text'>
+          <input className='form-check-input'
+            type='checkbox'
+            checked={this.state.types[type._id]}
+            onChange={(e) => {
+              this.changedChexBox(e, type._id)
+            }} />
+          <label>
+            {type.name}
+          </label>
+        </div>
+        <div className='col-5 offset-1 right-text'>
+          <label>
+            {'(' + number + ')'}
+          </label>
+          <img src={type.url} alt='filter' className='image-filter' />
+        </div>
+      </div>
+
+    )
   }
 
   changedChexBox (e, id) {
@@ -94,28 +129,6 @@ export class Navigation extends Component {
       types: types,
       points: points
     })
-  }
-
-  renderTypeFilter (type) {
-    let number = 0
-    this.props.points.forEach(point => {
-      number += point.type === type._id ? 1 : 0
-    })
-
-    return (
-      <div className='col-sm-6 form-check' >
-        <input className='form-check-input'
-          type='checkbox'
-          checked={this.state.types[type._id]}
-          onChange={(e) => {
-            this.changedChexBox(e, type._id)
-          }} />
-        <label className='form-check-label'>
-          {type.name + ' (' + number + ')'}
-        </label>
-        <img src={type.url} alt='filter' />
-      </div>
-    )
   }
 
   changeSelectedPoint (newSelectedPoint) {

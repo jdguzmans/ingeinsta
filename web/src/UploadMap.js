@@ -28,13 +28,15 @@ export class Map extends Component {
       let lat = coords.lat()
       let lng = coords.lng()
 
+      map.setCenter({lat: lat, lng: lng})
+
       let marker = new window.google.maps.Marker({
         position: {
           lat: lat,
           lng: lng
         },
         animation: window.google.maps.Animation.DROP,
-        map: this.map,
+        map: map,
         icon: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
       })
 
@@ -74,10 +76,10 @@ export class Map extends Component {
   render () {
     return (
       <div className='container-fluid'>
-        <div className='centered'>
+        <div className='centered-text'>
           <label><b>Posición</b></label>
         </div>
-        <div className='centered'>
+        <div className='centered-text'>
           <h6>Seleccione la ubicación manualmente o utilice la de su dispositivo</h6>
         </div>
         <div ref={this.uploadMapRef} id='upload-map' />

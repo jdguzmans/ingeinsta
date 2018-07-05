@@ -22,70 +22,65 @@ export class Point extends Component {
     })
 
     return (
-      <div>
-        <div className='container-fluid row centered' >
-          <div className='col-sm-3'>
-            <h4><b>Punto seleccionado</b></h4>
-          </div>
-          <div className='col-sm-6'>
-            <div className='row'>
-              <div className='col-sm-6'>
-                <h5><b>Tipo</b></h5>
-              </div>
-              <div className='col-sm-6'>
-                <h5>{type.name}</h5>
-              </div>
+      <div className='padding-top navigation-filters' >
+        <div className='centered-text'>
+          <h5><b>Punto seleccionado</b></h5>
+        </div>
+        <div className='padding-top' >
+          <div className='row'>
+            <div className='col-5 right-text'>
+              <h6><b>Tipo</b></h6>
             </div>
-            <div className='row'>
-              <div className='col-sm-6'>
-                <h5><b>Descripción</b></h5>
-              </div>
-              <div className='col-sm-6'>
-                <h5>{this.props.selectedPoint.description}</h5>
-              </div>
-            </div>
-            <div className='row'>
-              <div className='col-sm-6'>
-                <h5><b>Fecha</b></h5>
-              </div>
-              <div className='col-sm-6'>
-                <h5>{date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() }</h5>
-              </div>
-            </div>
-            <div className='row'>
-              <div className='col-sm-6'>
-                <h5><b>Identificador</b></h5>
-              </div>
-              <div className='col-sm-6'>
-                <h5>{this.props.selectedPoint._id}</h5>
-              </div>
+            <div className='col-6 offset-1 left-text'>
+              <h6>{type.name}</h6>
             </div>
           </div>
-          <div className='col-sm-3'>
-            <span className='anchor-link'>
-              <h4><a href='' onClick={(e) => {
-                this.props.getPointInformation(e)
-              }} >
-                Conozca más</a></h4>
-            </span>
+          <div className='row'>
+            <div className='col-5 right-text'>
+              <h6><b>Descripción</b></h6>
+            </div>
+            <div className='col-6 offset-1 left-text'>
+              <h6>{this.props.selectedPoint.description}</h6>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col-5 right-text'>
+              <h6><b>Fecha</b></h6>
+            </div>
+            <div className='col-6 offset-1 left-text'>
+              <h6>{date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() }</h6>
+            </div>
           </div>
         </div>
+        <div className='padding-top centered-text'>
+          <span className='anchor-link'>
+            <h5><a href='' onClick={(e) => {
+              this.props.getPointInformation(e)
+            }} >
+                Conozca más</a></h5>
+          </span>
+        </div>
         {this.props.selectedPointInformation &&
-        <div className='carousel slide' data-ride='carousel'>
-          <ol className='carousel-indicators'>
-            {this.renderCarouselIndicators()}
-          </ol>
-          <div className='carousel-inner'>
-            {this.renderSelectedPointImages()}
+        <div>
+          <div className='carousel slide' data-ride='carousel'>
+            <ol className='carousel-indicators'>
+              {this.renderCarouselIndicators()}
+            </ol>
+            <div className='carousel-inner'>
+              {this.renderSelectedPointImages()}
+            </div>
+            <a className='carousel-control-prev' data-slide='prev' onClick={this.previousImageInCarrousel}>
+              <span className='carousel-control-prev-icon' aria-hidden='true' />
+              <span className='sr-only'>Anterior</span>
+            </a>
+            <a className='carousel-control-next' data-slide='next' onClick={this.nextImageInCarrousel}>
+              <span className='carousel-control-next-icon' aria-hidden='true' />
+              <span className='sr-only'>Siguiente</span>
+            </a>
           </div>
-          <a className='carousel-control-prev' data-slide='prev' onClick={this.previousImageInCarrousel}>
-            <span className='carousel-control-prev-icon' aria-hidden='true' />
-            <span className='sr-only'>Anterior</span>
-          </a>
-          <a className='carousel-control-next' data-slide='next' onClick={this.nextImageInCarrousel}>
-            <span className='carousel-control-next-icon' aria-hidden='true' />
-            <span className='sr-only'>Siguiente</span>
-          </a>
+          <div className='padding-top centered-text'>
+            <h6><b>Id: </b>{this.props.selectedPoint._id}</h6>
+          </div>
         </div>
         }
       </div>

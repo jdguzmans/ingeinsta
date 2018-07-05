@@ -24,7 +24,7 @@ html, body {
 
 #map {
     height: 20em;
-    width: 96%;
+    width: 100%;
     margin-top: 0.8em;
     margin-left: auto;
     margin-right: auto;
@@ -32,7 +32,7 @@ html, body {
 
 #upload-map {
     height: 18em;
-    width: 96%;
+    width: 100%;
     margin-top: 0.8em;
     margin-bottom: 0.8em;
     margin-left: auto;
@@ -41,7 +41,7 @@ html, body {
 
 .point {
     padding-top: 1em;
-    width: 96%;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -75,6 +75,11 @@ a.navbar-brand:hoover {
 a.nav-link.selected {
     /* No funciona */
     color: rgba(255,255,255,.75);
+}
+
+.navigation-filters {
+    padding-right: 2em;
+    padding-left: 2em;
 }
 
 
