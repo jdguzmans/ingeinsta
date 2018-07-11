@@ -1,6 +1,6 @@
 # Ingeinsta
 
-Plattform to report and keep tracking engineering faults in public infrastructure.
+Plattform to report and keep track of engineering faults in public infrastructure.
 
 ## Built With MERN stack
 
