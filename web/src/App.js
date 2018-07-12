@@ -23,7 +23,7 @@ class App extends Component {
       types: []
     }
 
-    this.backURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://api.ingeinsta.com'
+    this.backURL = process.env.NODE_ENV === 'production' ? 'https://api.ingeinsta.com' : 'http://localhost:3000'
 
     this.changeSection = this.changeSection.bind(this)
     this.getTypesAndPoints = this.getTypesAndPoints.bind(this)
