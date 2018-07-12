@@ -11,6 +11,7 @@
     "sweetalert2": "^7.22.2"
   },
   "scripts": {
+    "dev" :"REACT_APP_STAGE=dev react-scripts start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
