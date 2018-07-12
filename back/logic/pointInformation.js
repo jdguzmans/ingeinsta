@@ -13,7 +13,7 @@ exports.findPointInformationById = (pointId) => {
       (err, client) => {
         if (err) reject(err)
         else {
-          let Points = client.db(config.db.name).collection('pointInformation')
+          let Points = client.db().collection('pointInformation')
           Points.findOne({_id: new ObjectId(pointId)},
           (err, res) => {
             if (err) reject(err)

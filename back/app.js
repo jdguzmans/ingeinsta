@@ -5,8 +5,6 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const fs = require('fs')
 const cors = require('cors')
-const config = require('./config')
-const mongoCLient = require('mongodb').MongoClient
 
 const app = express()
 
@@ -20,19 +18,11 @@ app.use(express.static(path.join(__dirname, 'public')))
 const AWS = require('aws-sdk')
 AWS.config.loadFromPath('./awsConfig.json')
 
-mongoCLient.connect(config.db.uri, (err, db) => {
-  if (err) throw err
-  else console.log('connected to DB server\n')
-  db.close()
-}
-)
-
 let routes = fs.readdirSync('./routes')
 routes.forEach(routeStr => {
   let routeName = routeStr.slice(0, -3)
   let route = require('./routes/' + routeName)
   app.use('/' + routeName, route)
-  console.log('loaded route ' + routeName)
 })
 
 module.exports = app

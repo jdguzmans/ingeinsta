@@ -1,5 +1,6 @@
 const config = require('./../config')
 const MongoCLient = require('mongodb').MongoClient
+const ObjectId = require('mongodb').ObjectID
 
 // mock()
 
@@ -14,7 +15,7 @@ const MongoCLient = require('mongodb').MongoClient
 //     (err, client) => {
 //       if (err) throw err
 //       else {
-//         let Types = client.db(config.db.name).collection('types')
+//         let Types = client.db().collection('types')
 //         Types.insertMany(types,
 //         (err) => {
 //           if (err) throw err
@@ -35,7 +36,7 @@ exports.findAllTypes = () => {
       (err, client) => {
         if (err) reject(err)
         else {
-          let Types = client.db(config.db.name).collection('types')
+          let Types = client.db().collection('types')
           Types.find({})
           .toArray(
           (err, types) => {
@@ -62,7 +63,7 @@ exports.insertType = (name) => {
         (err, client) => {
           if (err) reject(err)
           else {
-            let Types = client.db(config.db.name).collection('types')
+            let Types = client.db().collection('types')
             Types.insertOne({
               name: name
             }, (err) => {
@@ -74,5 +75,26 @@ exports.insertType = (name) => {
         }
       )
     }
+  })
+}
+
+/**
+ * Finds the type of the specified Id, if the type does not exist it resolves null.
+ * @param typeId Id iof the type to find
+ * @returns {Promise <Object>} A promise that resolves with the type or null if it does not exist.
+*/
+exports.findTypeById = (typeId) => {
+  return new Promise((resolve, reject) => {
+    MongoCLient.connect(config.db.uri, (err, client) => {
+      if (err) reject(err)
+      else {
+        let Types = client.db().collection('types')
+        Types.findOne({_id: ObjectId(typeId)}, (err, res) => {
+          if (err) reject(err)
+          else resolve(res)
+          client.close()
+        })
+      }
+    })
   })
 }
