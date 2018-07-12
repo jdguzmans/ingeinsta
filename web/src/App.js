@@ -23,6 +23,7 @@ class App extends Component {
       types: []
     }
 
+    console.log(process.env)
     this.backURL = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://api.ingeinsta.com'
 
     this.changeSection = this.changeSection.bind(this)
