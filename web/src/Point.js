@@ -79,7 +79,7 @@ export class Point extends Component {
             <h5><a href='' onClick={(e) => {
               this.props.getPointInformation(e)
             }} >
-              Conozca más</a></h5>
+              Investigar punto</a></h5>
           </span>
         </div>
         }
