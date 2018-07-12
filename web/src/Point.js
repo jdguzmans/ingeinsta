@@ -89,7 +89,7 @@ export class Point extends Component {
 
   renderSelectedPointImages () {
     return this.props.selectedPointInformation.images.map((image, i) => {
-      let src = 'https://s3.amazonaws.com/ingeinsta/' + this.props.selectedPoint._id + '-' + image.index + '.' + image.extension
+      let src = this.props.imageStorageURL + this.props.selectedPoint._id + '-' + image.index + '.' + image.extension
       let className = 'carousel-item ' + (i === this.state.selectedImageCarouselIndex ? 'active' : '')
       let date = new Date(image.date)
       return (
