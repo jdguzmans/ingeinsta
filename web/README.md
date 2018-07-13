@@ -1,11 +1,11 @@
-# Ingeinsta
+# Frontend
 
-Plattform to report and keep track of engineering faults in public infrastructure.
+### Prerequisites
+- The JavaScript runtime, [NodeJS](https://nodejs.org/en/).
+- A package manager, I prefer [NPM](https://www.npmjs.com/) but [Yarn](https://yarnpkg.com/lang/en/) is OK too.
 
-## Built With MERN stack
+## Installing
+- Run ```npm install```, it may take a while.
 
-* [MongoDB](https://www.mongodb.com/) - Non-relational database
-* [ExpressJS](https://expressjs.com/) - Web framework
-* [ReactJS](https://reactjs.org/) - Frontend
-* [NodeJS](https://nodejs.org/en/) - Backend
-
+### Running the app
+Run ```npm start```, the app then should be running on port ```3001```.
