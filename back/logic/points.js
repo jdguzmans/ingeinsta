@@ -45,20 +45,21 @@ exports.insertPoint = (description, typeId, lat, lng, information) => {
   let date = new Date().getTime()
 
   return new Promise((resolve, reject) => {
-    if (!description) reject(new Error('El punto debe tener una descripción'))
-    else if (!typeId) reject(new Error('El punto debe tener un tipo'))
-    else if (!lat) reject(new Error('El punto debe tener una latitud'))
-    else if (!lng) reject(new Error('El punto debe tener una longitud'))
-    else if (!information) reject(new Error('El punto debe tener información asociada'))
-    else if (!information.images || !information.images[0]) reject(new Error('El punto debe tener al menos una imagen asociada'))
-    else if (information.images.filter(image => {
+    if (!description || typeof description !== 'string') reject(new Error('El punto debe tener una descripción válida'))
+    else if (!typeId || typeof typeId !== 'string') reject(new Error('El punto debe tener un tipo válido'))
+    else if (!lat || typeof lat !== 'number') reject(new Error('El punto debe tener una latitud válida'))
+    else if (!lng || typeof lng !== 'number') reject(new Error('El punto debe tener una longitud válida'))
+    else if (!information || typeof information !== 'object') reject(new Error('El punto debe tener información asociada válida'))
+    else if (!information.images || typeof information.images !== 'object') reject(new Error('EL punto debe tener imágenes válidas'))
+    else if (!information.images[0]) reject(new Error('El punto debe tener al menos una imagen asociada'))
+    else if (information.images.filter((image, i) => {
       return !image.buffer || !image.extension
-    }).length > 0) reject(new Error('Imágenes no válidas'))
+    }).length > 0) reject(new Error('Error en las imágenes, deben todas tener su buffer asociado y la extensión especificada'))
     else if (information.images.length >= 15) reject(new Error('El número de imáges máximo que puede tener un punto es de 15.'))
     else {
       TypesLogic.findTypeById(typeId)
       .then(type => {
-        if (!type) reject(new Error('Tipo inválido'))
+        if (!type) reject(new Error('El tipo no existe'))
         else {
           MongoCLient.connect(config.db.uri, (err, client) => {
             if (err) {
