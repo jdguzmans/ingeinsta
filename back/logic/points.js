@@ -46,7 +46,7 @@ exports.insertPoint = (description, typeId, lat, lng, information) => {
 
   return new Promise((resolve, reject) => {
     if (!description || typeof description !== 'string') reject(new Error('El punto debe tener una descripción válida'))
-    else if (!typeId || typeof typeId !== 'string') reject(new Error('El punto debe tener un tipo válido'))
+    else if (!typeId || typeof typeId !== 'object') reject(new Error('El punto debe tener un tipo válido'))
     else if (!lat || typeof lat !== 'number') reject(new Error('El punto debe tener una latitud válida'))
     else if (!lng || typeof lng !== 'number') reject(new Error('El punto debe tener una longitud válida'))
     else if (!information || typeof information !== 'object') reject(new Error('El punto debe tener información asociada válida'))

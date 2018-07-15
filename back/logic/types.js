@@ -2,30 +2,6 @@ const config = require('./../config')
 const MongoCLient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectID
 
-// mock()
-
-// function mock () {
-//   let types = [{
-//     name: 'Pavimento'
-//   }, {
-//     name: 'Espacio Público'
-//   }]
-
-//   MongoCLient.connect(config.db.uri,
-//     (err, client) => {
-//       if (err) throw err
-//       else {
-//         let Types = client.db().collection('types')
-//         Types.insertMany(types,
-//         (err) => {
-//           if (err) throw err
-//           else console.log('Database mock TYPES created')
-//         })
-//       }
-//     }
-//   )
-// }
-
 /**
  * Finds all the types
  * @returns {Promise <Object>} A promise that resolves with all the types
