@@ -5,7 +5,7 @@
   "scripts": {
     "start": "DEV=1 nodemon ./bin/www",
     "deploy": "pm2 start ./bin/www",
-    "test": "TEST=1 nyc mocha -w -s 1000"
+    "test": "TEST=1 nyc mocha --async-only --timeout 30000"
   },
   "dependencies": {
     "async": "^2.6.1",

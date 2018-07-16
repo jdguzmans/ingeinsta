@@ -39,7 +39,7 @@ exports.findAllPoints = () => {
  * @param lng longitude of the point
  * @param information information of the point
  * @param information.images array of buffer
- * @returns {Promise <Object, Err>} a promise that resolves if inserted or rejects otherwise
+ * @returns {Promise <Object, Err>} a promise that resolves with the inserted id if the point was inserted or rejects otherwise
 */
 exports.insertPoint = (description, typeId, lat, lng, information) => {
   let date = new Date().getTime()
@@ -53,7 +53,8 @@ exports.insertPoint = (description, typeId, lat, lng, information) => {
     else if (!information.images || typeof information.images !== 'object') reject(new Error('EL punto debe tener imágenes válidas'))
     else if (!information.images[0]) reject(new Error('El punto debe tener al menos una imagen asociada'))
     else if (information.images.filter((image, i) => {
-      return !image.buffer || !image.extension
+      return !image.buffer || typeof image.buffer !== 'object' || !image.extension || typeof image.extension !== 'string' ||
+      !(image.extension === '.jpeg' || image.extension === 'jpg' || image.extension === 'png')
     }).length > 0) reject(new Error('Error en las imágenes, deben todas tener su buffer asociado y la extensión especificada'))
     else if (information.images.length >= 15) reject(new Error('El número de imáges máximo que puede tener un punto es de 15.'))
     else {
@@ -112,7 +113,7 @@ exports.insertPoint = (description, typeId, lat, lng, information) => {
                         })
                       }, (err) => {
                         if (err) reject(err)
-                        else resolve()
+                        else resolve(insertedId)
                         client.close()
                       })
                     }
