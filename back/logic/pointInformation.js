@@ -1,6 +1,8 @@
-const config = require('./../config')
+
 const MongoCLient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectID
+
+const { MONGODB_URI } = require('./../config')
 
 /**
  * Finds the information of a point
@@ -9,7 +11,7 @@ const ObjectId = require('mongodb').ObjectID
 */
 exports.findPointInformationById = (pointId) => {
   return new Promise((resolve, reject) => {
-    MongoCLient.connect(config.db.uri, (err, client) => {
+    MongoCLient.connect(MONGODB_URI, (err, client) => {
       if (err) reject(err)
       else {
         let Points = client.db().collection('pointInformation')
@@ -20,7 +22,6 @@ exports.findPointInformationById = (pointId) => {
           client.close()
         })
       }
-    }
-    )
+    })
   })
 }

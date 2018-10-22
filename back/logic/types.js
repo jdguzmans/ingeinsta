@@ -1,6 +1,8 @@
-const config = require('./../config')
+
 const MongoCLient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectID
+
+const { MONGODB_URI } = require('./../config')
 
 /**
  * Finds all the types
@@ -8,7 +10,7 @@ const ObjectId = require('mongodb').ObjectID
 */
 exports.findAllTypes = () => {
   return new Promise((resolve, reject) => {
-    MongoCLient.connect(config.db.uri,
+    MongoCLient.connect(MONGODB_URI,
       (err, client) => {
         if (err) reject(err)
         else {
@@ -35,7 +37,7 @@ exports.insertType = (name) => {
   return new Promise((resolve, reject) => {
     if (!name) reject(new Error('El tipo debe tener un nombre'))
     else {
-      MongoCLient.connect(config.db.uri,
+      MongoCLient.connect(MONGODB_URI,
         (err, client) => {
           if (err) reject(err)
           else {
@@ -61,7 +63,7 @@ exports.insertType = (name) => {
 */
 exports.findTypeById = (typeId) => {
   return new Promise((resolve, reject) => {
-    MongoCLient.connect(config.db.uri, (err, client) => {
+    MongoCLient.connect(MONGODB_URI, (err, client) => {
       if (err) reject(err)
       else {
         let Types = client.db().collection('types')

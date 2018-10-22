@@ -1,12 +1,9 @@
 /* global before after describe it */
-// https://docs.mongodb.com/manual/reference/method/db.collection.insertMany/
-// INTENTAR EN VEZ DE HACER DROP IR BORRANDO DOCUMENTO POR DOCUMENTO
+
+require('dotenv').config()
 
 const AWS = require('aws-sdk')
-AWS.config.loadFromPath('./awsConfig.json')
 const s3 = new AWS.S3()
-
-const eachLimit = require('async/eachLimit')
 
 const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
@@ -15,16 +12,17 @@ chai.use(chaiAsPromised)
 
 chai.should()
 
-const config = require('./../config')
 const MongoCLient = require('mongodb').MongoClient
 
 const pointsLogic = require('./../logic/points')
+
+const { MONGODB_URI, AWS_BUCKET } = require('./../config')
 
 describe('Points logic module', function () {
   let types
 
   before(function (done) {
-    MongoCLient.connect(config.db.uri, function (err, client) {
+    MongoCLient.connect(MONGODB_URI, function (err, client) {
       if (err) throw err
       let t = [{
         name: 'A'
@@ -47,7 +45,7 @@ describe('Points logic module', function () {
   })
 
   after(function (done) {
-    MongoCLient.connect(config.db.uri, function (err, client) {
+    MongoCLient.connect(MONGODB_URI, function (err, client) {
       if (err) throw err
 
       let Types = client.db().collection('types')
@@ -64,41 +62,6 @@ describe('Points logic module', function () {
   })
 
   describe('insertPoint', function () {
-    after(function (done) {
-      MongoCLient.connect(config.db.uri, function (err, client) {
-        if (err) throw err
-        else {
-          let Points = client.db().collection('points')
-          Points.drop({}, function (err, res) {
-            if (err) throw err
-            else {
-              let PointInformation = client.db().collection('pointInformation')
-              PointInformation.drop({}, function (err, res) {
-                if (err) throw err
-                else {
-                  s3.listObjects({Bucket: config.awsBucket}, function (err, data) {
-                    let objects = data.Contents
-                    if (err) throw err
-                    else {
-                      eachLimit(objects, 2, function (object, cb) {
-                        s3.deleteObject({Bucket: config.awsBucket, Key: object.Key}, function (err) {
-                          if (err) throw err
-                          else cb()
-                        })
-                      }, function (err) {
-                        if (err) throw err
-                        else done()
-                      })
-                    }
-                  })
-                }
-              })
-            }
-          })
-        }
-      })
-    })
-
     it('should fail because point description is not valid', function (done) {
       pointsLogic.insertPoint().should.be.rejectedWith('El punto debe tener una descripción válida')
       pointsLogic.insertPoint(242).should.be.rejectedWith('El punto debe tener una descripción válida')
@@ -135,6 +98,51 @@ describe('Points logic module', function () {
       pointsLogic.insertPoint('description15', types[0]._id, 71.85, 49.74, {images: [{buffer: Buffer.from('a')}]}).should.be.rejectedWith('Error en las imágenes, deben todas tener su buffer asociado y la extensión especificada')
       pointsLogic.insertPoint('description16', types[0]._id, 71.85, 49.74, {images: [{buffer: Buffer.from('a'), extension: 'jpg'}]}).should.not.be.rejectedWith('Error en las imágenes, deben todas tener su buffer asociado y la extensión especificada')
       done()
+    })
+
+    after(function (done) {
+      MongoCLient.connect(MONGODB_URI, function (err, client) {
+        if (err) throw err
+        else {
+          const Points = client.db().collection('points')
+          Points.drop(function (err) {
+            if (err) throw err
+            else {
+              const PointInformation = client.db().collection('pointInformation')
+              PointInformation.drop(function (err) {
+                if (err) throw err
+                else {
+                  const params = {
+                    Bucket: AWS_BUCKET
+                  }
+
+                  s3.listObjectsV2(params, function (err, data) {
+                    if (err) throw err
+                    else {
+                      const { Contents: contents } = data
+                      const toDelete = contents.map(function (content) {
+                        const { Key } = content
+                        return { Key }
+                      })
+                      const params = {
+                        Bucket: AWS_BUCKET,
+                        Delete: {
+                          Objects: toDelete
+                        }
+                      }
+
+                      s3.deleteObjects(params, function (err, data) {
+                        if (err) throw err
+                        else done()
+                      })
+                    }
+                  })
+                }
+              })
+            }
+          })
+        }
+      })
     })
   })
 

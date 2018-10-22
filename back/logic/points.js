@@ -1,9 +1,11 @@
-const config = require('./../config')
+
 const MongoCLient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectID
 const AWS = require('aws-sdk')
 const s3 = new AWS.S3()
 const eachLimit = require('async/eachLimit')
+
+const { MONGODB_URI, AWS_BUCKET } = require('./../config')
 
 const TypesLogic = require('./types')
 
@@ -13,14 +15,12 @@ const TypesLogic = require('./types')
 */
 exports.findAllPoints = () => {
   return new Promise((resolve, reject) => {
-    MongoCLient.connect(config.db.uri,
+    MongoCLient.connect(MONGODB_URI,
       (err, client) => {
         if (err) reject(err)
         else {
           let Points = client.db().collection('points')
-          Points.find({})
-          .toArray(
-          (err, points) => {
+          Points.find({}).toArray((err, points) => {
             if (err) reject(err)
             else resolve(points)
             client.close()
@@ -44,9 +44,9 @@ exports.findAllPoints = () => {
 exports.insertPoint = (description, typeId, lat, lng, information) => {
   let date = new Date().getTime()
 
-  return new Promise((resolve, reject) => {
+  return new Promise(async(resolve, reject) => {
     if (!description || typeof description !== 'string') reject(new Error('El punto debe tener una descripción válida'))
-    else if (!typeId || typeof typeId !== 'object') reject(new Error('El punto debe tener un tipo válido'))
+    else if (!typeId) reject(new Error('El punto debe tener un tipo válido'))
     else if (!lat || typeof lat !== 'number') reject(new Error('El punto debe tener una latitud válida'))
     else if (!lng || typeof lng !== 'number') reject(new Error('El punto debe tener una longitud válida'))
     else if (!information || typeof information !== 'object') reject(new Error('El punto debe tener información asociada válida'))
@@ -58,72 +58,71 @@ exports.insertPoint = (description, typeId, lat, lng, information) => {
     }).length > 0) reject(new Error('Error en las imágenes, deben todas tener su buffer asociado y la extensión especificada'))
     else if (information.images.length >= 15) reject(new Error('El número de imáges máximo que puede tener un punto es de 15.'))
     else {
-      TypesLogic.findTypeById(typeId)
-      .then(type => {
-        if (!type) reject(new Error('El tipo no existe'))
-        else {
-          MongoCLient.connect(config.db.uri, (err, client) => {
-            if (err) {
-              reject(err)
-              client.close()
-            } else {
-              let Points = client.db().collection('points')
-              let point = {
-                description: description,
-                type: typeId,
-                lat: lat,
-                lng: lng,
-                date: date
-              }
-              Points.insertOne(point, (err, res) => {
-                if (err) {
-                  reject(err)
-                  client.close()
-                } else {
-                  let insertedId = res.insertedId
+      const type = await TypesLogic.findTypeById(typeId)
 
-                  let images = []
-                  information.images.forEach((image, index) => {
-                    images.push({
-                      index: index,
-                      date: date,
-                      extension: image.extension
-                    })
-                    image.index = index
-                  })
-                  let PointInformation = client.db().collection('pointInformation')
-                  let pointInformation = {
-                    _id: ObjectId(insertedId),
-                    images: images
-                  }
-                  PointInformation.insertOne(pointInformation, (err) => {
-                    if (err) {
-                      reject(err)
-                      client.close()
-                    } else {
-                      eachLimit(information.images, 1, (image, cb) => {
-                        s3.putObject({
-                          Bucket: config.awsBucket,
-                          Key: String(insertedId + '-' + image.index + '.' + image.extension),
-                          Body: image.buffer,
-                          ACL: 'public-read'
-                        }, (err, data) => {
-                          if (err) throw err
-                          else cb()
-                        })
-                      }, (err) => {
-                        if (err) reject(err)
-                        else resolve(insertedId)
-                        client.close()
-                      })
-                    }
-                  })
-                }
-              })
+      if (!type) reject(new Error('El tipo no existe'))
+      else {
+        MongoCLient.connect(MONGODB_URI, (err, client) => {
+          if (err) {
+            reject(err)
+            client.close()
+          } else {
+            let Points = client.db().collection('points')
+            let point = {
+              description: description,
+              type: typeId,
+              lat: lat,
+              lng: lng,
+              date: date
             }
-          })
-        }
-      })
+            Points.insertOne(point, (err, res) => {
+              if (err) {
+                reject(err)
+                client.close()
+              } else {
+                let insertedId = res.insertedId
+
+                let images = []
+                information.images.forEach((image, index) => {
+                  images.push({
+                    index: index,
+                    date: date,
+                    extension: image.extension
+                  })
+                  image.index = index
+                })
+                let PointInformation = client.db().collection('pointInformation')
+                let pointInformation = {
+                  _id: ObjectId(insertedId),
+                  images: images
+                }
+                PointInformation.insertOne(pointInformation, (err) => {
+                  if (err) {
+                    reject(err)
+                    client.close()
+                  } else {
+                    eachLimit(information.images, 1, (image, cb) => {
+                      s3.putObject({
+                        Bucket: AWS_BUCKET,
+                        Key: String(insertedId + '-' + image.index + '.' + image.extension),
+                        Body: image.buffer,
+                        ACL: 'public-read'
+                      }, (err, data) => {
+                        if (err) throw err
+                        else cb()
+                      })
+                    }, (err) => {
+                      if (err) reject(err)
+                      else resolve(insertedId)
+                      client.close()
+                    })
+                  }
+                })
+              }
+            })
+          }
+        })
+      }
     }
   })
 }

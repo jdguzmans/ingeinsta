@@ -15,9 +15,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-const AWS = require('aws-sdk')
-AWS.config.loadFromPath('./awsConfig.json')
-
 let routes = fs.readdirSync('./routes')
 routes.forEach(routeStr => {
   let routeName = routeStr.slice(0, -3)
