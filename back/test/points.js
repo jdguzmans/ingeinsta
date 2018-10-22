@@ -24,13 +24,13 @@ describe('Points logic module', function () {
   before(function (done) {
     MongoCLient.connect(MONGODB_URI, function (err, client) {
       if (err) throw err
-      let t = [{
+      const t = [{
         name: 'A'
       }, {
         name: 'B'
       }]
 
-      let Types = client.db().collection('types')
+      const Types = client.db().collection('types')
       Types.insertMany(t, function (err, res) {
         if (err) {
           client.close()
@@ -133,7 +133,10 @@ describe('Points logic module', function () {
 
                       s3.deleteObjects(params, function (err, data) {
                         if (err) throw err
-                        else done()
+                        else {
+                          client.close()
+                          done()
+                        }
                       })
                     }
                   })
