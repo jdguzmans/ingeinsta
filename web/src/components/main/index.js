@@ -3,15 +3,17 @@
 import React, { Component } from 'react'
 import { HashRouter as Router, Route } from 'react-router-dom'
 
-import './App.css'
+import './styles.css'
 
-import Navbar from './Navbar'
+import Navbar from '../navbar'
 
-import Home from './Home'
-import Navigation from './Navigation'
-import Upload from './Upload'
+import Home from '../home'
+import Navigation from '../navigation'
+import Upload from '../upload'
 
 import parallel from 'async/parallel'
+
+const { BACKEND_URL } = require('../../config')
 
 class App extends Component {
   constructor (props) {
@@ -117,7 +119,7 @@ class App extends Component {
         data.append('information_images_' + i, image)
       })
 
-      fetch(this.backURL + '/points', {
+      fetch(BACKEND_URL + '/points', {
         mode: 'cors',
         method: 'POST',
         body: data
@@ -132,7 +134,7 @@ class App extends Component {
   getTypesAndPoints () {
     parallel([
       (cb) => {
-        fetch(this.backURL + '/types', {
+        fetch(BACKEND_URL + '/types', {
           mode: 'cors'
         })
         .then(response => {
@@ -144,7 +146,7 @@ class App extends Component {
           } else console.log('Problems reaching the server')
         })
       }, (cb) => {
-        fetch(this.backURL + '/points', {
+        fetch(BACKEND_URL + '/points', {
           mode: 'cors'
         })
         .then(response => {

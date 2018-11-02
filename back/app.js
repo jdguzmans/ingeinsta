@@ -15,10 +15,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-let routes = fs.readdirSync('./routes')
+const routes = fs.readdirSync('./routes')
 routes.forEach(routeStr => {
-  let routeName = routeStr.slice(0, -3)
-  let route = require('./routes/' + routeName)
+  const routeName = routeStr.slice(0, -3)
+  const route = require('./routes/' + routeName)
   app.use('/' + routeName, route)
 })
 

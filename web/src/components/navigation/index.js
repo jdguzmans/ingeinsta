@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 
-import NavigationMap from './NavigationMap'
-import Point from './Point'
+import NavigationMap from '../navigationMap'
+import Point from '../point'
+
+const { BACKEND_URL } = require('../../config')
 
 export class Navigation extends Component {
   constructor (props) {
@@ -46,7 +48,7 @@ export class Navigation extends Component {
             currentPosition={this.props.currentPosition}
             points={this.state.points}
             changeSelectedPoint={this.changeSelectedPoint}
-        />
+          />
         </div>
 
         {this.state.selectedPoint &&
@@ -61,22 +63,6 @@ export class Navigation extends Component {
 
       </div>
     )
-  }
-
-  renderTypeFilters () {
-    let toReturn = []
-
-    let i = 0
-    while (i < this.props.types.length) {
-      toReturn.push(
-        <div className='container-fluid row centered-text' key={i}>
-          {this.renderTypeFilter(this.props.types[i])}
-          {(i + 1) < this.props.types.length ? this.renderTypeFilter(this.props.types[i + 1]) : ' '}
-        </div>
-      )
-      i = i + 2
-    }
-    return toReturn
   }
 
   renderTypeFilter (type) {
@@ -107,6 +93,22 @@ export class Navigation extends Component {
       </div>
 
     )
+  }
+
+  renderTypeFilters () {
+    const toReturn = []
+
+    let i = 0
+    while (i < this.props.types.length) {
+      toReturn.push(
+        <div className='container-fluid row centered-text' key={i}>
+          {this.renderTypeFilter(this.props.types[i])}
+          {(i + 1) < this.props.types.length ? this.renderTypeFilter(this.props.types[i + 1]) : ' '}
+        </div>
+    )
+      i = i + 2
+    }
+    return toReturn
   }
 
   changedChexBox (e, id) {
@@ -142,7 +144,7 @@ export class Navigation extends Component {
   getPointInformation (e) {
     e.preventDefault()
     if (!this.state.selectedPointInformation || this.state.selectedPoint._id !== this.state.selectedPointInformation._id) {
-      fetch(this.props.backURL + '/points/' + this.state.selectedPoint._id + '/information', {
+      fetch(BACKEND_URL + '/points/' + this.state.selectedPoint._id + '/information', {
         mode: 'cors'
       })
       .then(response => {

@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import whilst from 'async/whilst'
 
-import UploadMap from './UploadMap'
+import UploadMap from '../uploadMap'
 import Swal from 'sweetalert2'
 
 export class Upload extends Component {

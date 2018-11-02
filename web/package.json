@@ -8,10 +8,12 @@
     "react-dom": "^16.4.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
+    "recompose": "^0.30.0",
     "sweetalert2": "^7.22.2"
   },
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
+    "dev": "PORT=3601 REACT_APP_DEV=1 react-scripts start",
+    "start": "PORT=3601 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",

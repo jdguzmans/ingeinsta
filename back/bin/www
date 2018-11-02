@@ -2,6 +2,8 @@
 
 require('dotenv').config()
 
+const { PORT } = require('../config')
+
 /**
  * Module dependencies.
  */
@@ -14,7 +16,7 @@ var http = require('http')
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000')
+var port = normalizePort(PORT)
 app.set('port', port)
 
 /**
@@ -89,4 +91,5 @@ function onListening () {
     ? 'pipe ' + addr
     : 'port ' + addr.port
   debug('Listening on ' + bind)
+  console.log(`backend listening on ${bind}\n`)
 }
