@@ -25,9 +25,6 @@ class App extends Component {
       types: []
     }
 
-    this.backURL = process.env.NODE_ENV === 'production' ? 'https://api.ingeinsta.com' : 'http://localhost:3000'
-    this.imageStorageURL = process.env.NODE_ENV === 'production' ? 'https://s3.amazonaws.com/ingeinsta/' : 'https://s3.amazonaws.com/ingeinsta-dev/'
-
     this.changeSection = this.changeSection.bind(this)
     this.getTypesAndPoints = this.getTypesAndPoints.bind(this)
     this.uploadPoint = this.uploadPoint.bind(this)
@@ -82,7 +79,6 @@ class App extends Component {
                   <Navigation
                     {...props}
                     backURL={this.backURL}
-                    imageStorageURL={this.imageStorageURL}
                     types={this.state.types}
                     currentPosition={this.state.currentPosition}
                     points={this.state.points}

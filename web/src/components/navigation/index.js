@@ -53,7 +53,6 @@ export class Navigation extends Component {
 
         {this.state.selectedPoint &&
           <Point
-            imageStorageURL={this.props.imageStorageURL}
             types={this.props.types}
             selectedPoint={this.state.selectedPoint}
             getPointInformation={this.getPointInformation}

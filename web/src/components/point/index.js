@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+const { IMAGE_URL } = require('../../config')
+
 export class Point extends Component {
   constructor (props) {
     super(props)
@@ -89,7 +91,7 @@ export class Point extends Component {
 
   renderSelectedPointImages () {
     return this.props.selectedPointInformation.images.map((image, i) => {
-      let src = this.props.imageStorageURL + this.props.selectedPoint._id + '-' + image.index + '.' + image.extension
+      let src = IMAGE_URL + this.props.selectedPoint._id + '-' + image.index + '.' + image.extension
       let className = 'carousel-item ' + (i === this.state.selectedImageCarouselIndex ? 'active' : '')
       let date = new Date(image.date)
       return (
