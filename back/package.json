@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "DEV=1 nodemon ./bin/www",
-    "deploy": "pm2 start ./bin/www",
-    "test": "TEST=1 nyc mocha --async-only --timeout 30000"
+    "test": "TEST=1 nyc mocha --async-only --timeout 30000",
+    "first-deploy": "pm2 start ./bin/www --name ingeinsta-back",
+    "deploy": "pm2 delete ingeinsta-back && pm2 start ./bin/www --name ingeinsta-back"
   },
   "dependencies": {
     "async": "^2.6.1",
