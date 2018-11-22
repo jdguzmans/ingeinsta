@@ -9,7 +9,7 @@ const Navbar = enhance(props => {
     <nav className='navbar navbar-expand-sm navbar-dark'>
       <Link className='navbar-brand' replace to={'/'}>
           Ingeinsta
-        </Link>
+      </Link>
       <button className='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation'>
         <span className='navbar-toggler-icon' />
       </button>
@@ -18,10 +18,10 @@ const Navbar = enhance(props => {
         <ul className='navbar-nav mr-auto'>
           <Link className='nav-link' replace to={'/navigate'}>
               Navegar
-            </Link>
+          </Link>
           <Link className='nav-link' replace to={'/upload'}>
               Subir
-            </Link>
+          </Link>
         </ul>
       </div>
     </nav>

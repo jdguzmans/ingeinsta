@@ -16,12 +16,12 @@ exports.findAllTypes = () => {
         else {
           let Types = client.db().collection('types')
           Types.find({})
-          .toArray(
-          (err, types) => {
-            if (err) reject(err)
-            else resolve(types)
-            client.close()
-          })
+            .toArray(
+              (err, types) => {
+                if (err) reject(err)
+                else resolve(types)
+                client.close()
+              })
         }
       }
     )
@@ -67,7 +67,7 @@ exports.findTypeById = (typeId) => {
       if (err) reject(err)
       else {
         let Types = client.db().collection('types')
-        Types.findOne({_id: ObjectId(typeId)}, (err, res) => {
+        Types.findOne({ _id: ObjectId(typeId) }, (err, res) => {
           if (err) reject(err)
           else resolve(res)
           client.close()

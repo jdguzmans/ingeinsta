@@ -28,7 +28,7 @@ export class NavigationMap extends Component {
   componentDidUpdate (prevProps, prevState) {
     let change = false
 
-    let markers = this.state.markers
+    const markers = this.state.markers
 
     for (let markerId in markers) {
       let deleted = true

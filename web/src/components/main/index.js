@@ -1,4 +1,4 @@
-/* global FormData */
+/* global FormData fetch */
 
 import React, { Component } from 'react'
 import { HashRouter as Router, Route } from 'react-router-dom'
@@ -39,22 +39,21 @@ class App extends Component {
   componentDidMount () {
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition(
-      (pos) => {
-        let lat = pos.coords.latitude
-        let lng = pos.coords.longitude
+        (pos) => {
+          const { coords: { latitude: lat, longitude: lng } } = pos
 
-        let changedLat = !this.state.currentPosition || Math.abs(lat - this.state.currentPosition.lat) > 0.0000005
-        let changedLng = !this.state.currentPosition || Math.abs(lng - this.state.currentPosition.lng) > 0.0000005
+          const changedLat = !this.state.currentPosition || Math.abs(lat - this.state.currentPosition.lat) > 0.0000005
+          const changedLng = !this.state.currentPosition || Math.abs(lng - this.state.currentPosition.lng) > 0.0000005
 
-        if (changedLat || changedLng) {
-          this.setState({
-            currentPosition: {
-              lat: lat,
-              lng: lng
-            }
-          })
-        }
-      })
+          if (changedLat || changedLng) {
+            this.setState({
+              currentPosition: {
+                lat,
+                lng
+              }
+            })
+          }
+        })
     }
     this.getTypesAndPoints()
   }
@@ -82,7 +81,7 @@ class App extends Component {
                     types={this.state.types}
                     currentPosition={this.state.currentPosition}
                     points={this.state.points}
-                />
+                  />
                 }
               />
               <Route
@@ -104,8 +103,8 @@ class App extends Component {
   }
 
   uploadPoint (point) {
-    return new Promise((resolve, reject) => {
-      let data = new FormData()
+    return new Promise(async (resolve, reject) => {
+      const data = new FormData()
       data.append('description', point.description)
       data.append('type', point.type)
       data.append('lat', point.lat)
@@ -115,50 +114,42 @@ class App extends Component {
         data.append('information_images_' + i, image)
       })
 
-      fetch(BACKEND_URL + '/points', {
+      await fetch(BACKEND_URL + '/points', {
         mode: 'cors',
         method: 'POST',
         body: data
       })
-      .then(response => {
-        this.getTypesAndPoints()
-        resolve()
-      })
+
+      this.getTypesAndPoints()
+      resolve()
     })
   }
 
   getTypesAndPoints () {
     parallel([
-      (cb) => {
-        fetch(BACKEND_URL + '/types', {
+      async (cb) => {
+        const response = await fetch(BACKEND_URL + '/types', {
           mode: 'cors'
         })
-        .then(response => {
-          if (response.status === 200) {
-            response.json()
-            .then(types => {
-              cb(null, types)
-            })
-          } else console.log('Problems reaching the server')
-        })
-      }, (cb) => {
-        fetch(BACKEND_URL + '/points', {
+
+        if (response.status === 200) {
+          const types = await response.json()
+          cb(null, types)
+        } else console.log('Problems reaching the server')
+      }, async (cb) => {
+        const response = await fetch(BACKEND_URL + '/points', {
           mode: 'cors'
         })
-        .then(response => {
-          if (response.status === 200) {
-            response.json()
-            .then(points => {
-              cb(null, points)
-            })
-          } else console.log('Problems reaching the server')
-        })
+        if (response.status === 200) {
+          const points = await response.json()
+          cb(null, points)
+        } else console.log('Problems reaching the server')
       }
     ], (err, res) => {
       if (err) console.log(err)
       else {
-        let types = res[0]
-        let points = res[1]
+        const types = res[0]
+        const points = res[1]
 
         this.setState({
           types: types,

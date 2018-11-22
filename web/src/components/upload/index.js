@@ -55,12 +55,12 @@ export class Upload extends Component {
     })
   }
 
-  handleSubmit (e) {
+  async handleSubmit (e) {
     e.preventDefault()
     this.startLoading()
-
-    let point = {
+    const point = {
       description: this.state.description,
+
       type: this.state.type,
       lat: this.state.lat,
       lng: this.state.lng,
@@ -69,28 +69,27 @@ export class Upload extends Component {
       }
     }
 
-    this.props.uploadPoint(point)
-    .then(() => {
-      Swal('Punto subido satisfactoriamente')
-      this.setState({
-        description: '',
-        type: null,
-        images: null,
-        imagePreviewURLs: null,
-        selectedImageCarouselIndex: null,
-        lat: null,
-        lng: null
-      })
-      this.finishLoading()
+    await this.props.uploadPoint(point)
+
+    Swal('Punto subido satisfactoriamente')
+    this.setState({
+      description: '',
+      type: null,
+      images: null,
+      imagePreviewURLs: null,
+      selectedImageCarouselIndex: null,
+      lat: null,
+      lng: null
     })
+    this.finishLoading()
   }
 
   handleImageChange (e) {
-    let fileList = e.target.files
-    let length = fileList.length
+    const { target: { files: fileList } } = e
+    const length = fileList.length
 
-    let images = []
-    let urls = []
+    const images = []
+    const urls = []
 
     let i = 0
     whilst(
@@ -99,7 +98,7 @@ export class Upload extends Component {
       },
       (cb) => {
         let reader = new FileReader()
-        let file = fileList[i]
+        const file = fileList[i]
         reader.onloadend = () => {
           images.push(file)
           urls.push(reader.result)
@@ -112,7 +111,7 @@ export class Upload extends Component {
         if (err) throw err
         this.setState({
           selectedImageCarouselIndex: 0,
-          images: images,
+          images,
           imageURLs: urls
         })
       }
@@ -154,7 +153,7 @@ export class Upload extends Component {
 
   renderUploadImages () {
     return this.state.imageURLs.map((url, i) => {
-      let className = 'carousel-item ' + (i === this.state.selectedImageCarouselIndex ? 'active' : '')
+      const className = 'carousel-item ' + (i === this.state.selectedImageCarouselIndex ? 'active' : '')
       return (
         <div key={i} className={className}>
           <img className='d-block w-100' src={url} alt={'Slide ' + i} />
@@ -203,7 +202,7 @@ export class Upload extends Component {
               uploadPointIcon={this.props.uploadPointIcon}
               currentPosition={this.props.currentPosition}
               handlePositionChange={this.handlePositionChange}
-                />
+            />
           </div>
         </div>
 
@@ -232,7 +231,7 @@ export class Upload extends Component {
                 <span className='sr-only'>Siguiente</span>
               </a>
             </div>
-              }
+            }
           </div>
           <div className='row container-fluid padding-top padding-bottom'>
             <div className='form-group offset-sm-4 col-sm-8' >
@@ -250,9 +249,9 @@ export class Upload extends Component {
     return (
       <div>
         { this.state.loading
-        ? <div className='loader' />
-        : <div>{this.returnEverything()}</div>
-      }
+          ? <div className='loader' />
+          : <div>{this.returnEverything()}</div>
+        }
       </div>
     )
   }

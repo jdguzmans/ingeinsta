@@ -1,3 +1,5 @@
+/* global fetch */
+
 import React, { Component } from 'react'
 
 import NavigationMap from '../navigationMap'
@@ -65,6 +67,8 @@ export class Navigation extends Component {
   }
 
   renderTypeFilter (type) {
+    const { name, url, _id } = type
+
     let number = 0
     this.props.points.forEach(point => {
       number += point.type === type._id ? 1 : 0
@@ -75,19 +79,19 @@ export class Navigation extends Component {
         <div className='col-5 offset-1 form-check left-text'>
           <input className='form-check-input'
             type='checkbox'
-            checked={this.state.types[type._id]}
+            checked={this.state.types[_id]}
             onChange={(e) => {
-              this.changedChexBox(e, type._id)
+              this.changedChexBox(e, _id)
             }} />
           <label>
-            {type.name}
+            {name}
           </label>
         </div>
         <div className='col-5 offset-1 right-text'>
           <label>
-            {'(' + number + ')'}
+            {`(${number})`}
           </label>
-          <img src={type.url} alt='filter' className='image-filter' />
+          <img src={url} alt='filter' className='image-filter' />
         </div>
       </div>
 
@@ -104,17 +108,17 @@ export class Navigation extends Component {
           {this.renderTypeFilter(this.props.types[i])}
           {(i + 1) < this.props.types.length ? this.renderTypeFilter(this.props.types[i + 1]) : ' '}
         </div>
-    )
+      )
       i = i + 2
     }
     return toReturn
   }
 
   changedChexBox (e, id) {
-    let target = e.target
+    const { target } = e
     let value = target.type === 'checkbox' ? target.checked : target.value
 
-    let types = this.state.types
+    const types = this.state.types
     types[id] = value
 
     let points = this.state.points
@@ -140,22 +144,19 @@ export class Navigation extends Component {
     })
   }
 
-  getPointInformation (e) {
+  async getPointInformation (e) {
     e.preventDefault()
     if (!this.state.selectedPointInformation || this.state.selectedPoint._id !== this.state.selectedPointInformation._id) {
-      fetch(BACKEND_URL + '/points/' + this.state.selectedPoint._id + '/information', {
+      const response = await fetch(BACKEND_URL + '/points/' + this.state.selectedPoint._id + '/information', {
         mode: 'cors'
       })
-      .then(response => {
-        if (response.status === 200) {
-          response.json()
-          .then(pointInformation => {
-            this.setState({
-              selectedPointInformation: pointInformation
-            })
-          })
-        } else console.log('Problems reaching the server')
-      })
+
+      if (response.status === 200) {
+        const pointInformation = await response.json()
+        this.setState({
+          selectedPointInformation: pointInformation
+        })
+      } else console.log('Problems reaching the server')
     }
   }
 }

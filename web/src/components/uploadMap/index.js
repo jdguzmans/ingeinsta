@@ -50,16 +50,14 @@ export class Map extends Component {
 
   useCurrentPositionCoords () {
     if (this.state.positionMarker) this.state.positionMarker.setMap(null)
-    let coords = this.props.currentPosition
-    let lat = coords.lat
-    let lng = coords.lng
+    const { lat, lng } = this.props.currentPosition
 
-    this.map.setCenter({lat: lat, lng: lng})
+    this.map.setCenter({ lat: lat, lng: lng })
 
     let marker = new window.google.maps.Marker({
       position: {
-        lat: lat,
-        lng: lng
+        lat,
+        lng
       },
       animation: window.google.maps.Animation.DROP,
       map: this.map,
@@ -85,8 +83,8 @@ export class Map extends Component {
         <div ref={this.uploadMapRef} id='upload-map' />
         <div className='col-sm-6 offset-sm-6'>
           {this.props.currentPosition
-        ? <button type='button' className='btn btn-secondary btn-sm' onClick={this.useCurrentPositionCoords} disabled={!this.props.currentPosition}>Utilizar mi posición actual</button>
-        : <label>Geolocalización deshabilitada</label>
+            ? <button type='button' className='btn btn-secondary btn-sm' onClick={this.useCurrentPositionCoords} disabled={!this.props.currentPosition}>Utilizar mi posición actual</button>
+            : <label>Geolocalización deshabilitada</label>
           }
         </div>
       </div>

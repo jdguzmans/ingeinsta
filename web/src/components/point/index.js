@@ -17,7 +17,7 @@ export class Point extends Component {
   }
 
   render () {
-    let date = new Date(this.props.selectedPoint.date)
+    const date = new Date(this.props.selectedPoint.date)
     let type
     this.props.types.forEach(t => {
       type = t._id === this.props.selectedPoint.type ? t : type
@@ -55,35 +55,35 @@ export class Point extends Component {
           </div>
         </div>
         {this.props.selectedPointInformation
-        ? <div className='padding-top' >
-          <div className='carousel slide' data-ride='carousel'>
-            <ol className='carousel-indicators'>
-              {this.renderCarouselIndicators()}
-            </ol>
-            <div className='carousel-inner'>
-              {this.renderSelectedPointImages()}
+          ? <div className='padding-top' >
+            <div className='carousel slide' data-ride='carousel'>
+              <ol className='carousel-indicators'>
+                {this.renderCarouselIndicators()}
+              </ol>
+              <div className='carousel-inner'>
+                {this.renderSelectedPointImages()}
+              </div>
+              <a className='carousel-control-prev' data-slide='prev' onClick={this.previousImageInCarrousel}>
+                <span className='carousel-control-prev-icon' aria-hidden='true' />
+                <span className='sr-only'>Anterior</span>
+              </a>
+              <a className='carousel-control-next' data-slide='next' onClick={this.nextImageInCarrousel}>
+                <span className='carousel-control-next-icon' aria-hidden='true' />
+                <span className='sr-only'>Siguiente</span>
+              </a>
             </div>
-            <a className='carousel-control-prev' data-slide='prev' onClick={this.previousImageInCarrousel}>
-              <span className='carousel-control-prev-icon' aria-hidden='true' />
-              <span className='sr-only'>Anterior</span>
-            </a>
-            <a className='carousel-control-next' data-slide='next' onClick={this.nextImageInCarrousel}>
-              <span className='carousel-control-next-icon' aria-hidden='true' />
-              <span className='sr-only'>Siguiente</span>
-            </a>
+            <div className='padding-top centered-text'>
+              <h6><i>Punto con identificador {this.props.selectedPoint._id}</i></h6>
+            </div>
           </div>
-          <div className='padding-top centered-text'>
-            <h6><i>Punto con identificador {this.props.selectedPoint._id}</i></h6>
-          </div>
-        </div>
-        : <div className='padding-top centered-text'>
-          <span className='anchor-link'>
-            <h5><a href='' onClick={(e) => {
-              this.props.getPointInformation(e)
-            }} >
+          : <div className='padding-top centered-text'>
+            <span className='anchor-link'>
+              <h5><a href='' onClick={(e) => {
+                this.props.getPointInformation(e)
+              }} >
               Investigar punto</a></h5>
-          </span>
-        </div>
+            </span>
+          </div>
         }
       </div>
     )
@@ -91,9 +91,10 @@ export class Point extends Component {
 
   renderSelectedPointImages () {
     return this.props.selectedPointInformation.images.map((image, i) => {
-      let src = IMAGE_URL + this.props.selectedPoint._id + '-' + image.index + '.' + image.extension
-      let className = 'carousel-item ' + (i === this.state.selectedImageCarouselIndex ? 'active' : '')
-      let date = new Date(image.date)
+      const src = IMAGE_URL + this.props.selectedPoint._id + '-' + image.index + '.' + image.extension
+      const className = 'carousel-item ' + (i === this.state.selectedImageCarouselIndex ? 'active' : '')
+      const date = new Date(image.date)
+
       return (
         <div key={i}>
           <div className={className}>
